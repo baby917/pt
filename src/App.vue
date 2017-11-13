@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
   import {Cell} from 'vux'
 export default {
     components:{
