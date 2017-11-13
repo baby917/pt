@@ -44,6 +44,56 @@ export default new Router({
       meta:{
         title:'订单详情'
       }
+    },
+    {
+      path:'/freedoclist',
+      component:function (resolve) {
+        require(['./view/freedoclist.vue'],resolve)
+      },
+      name:'freedoclist',
+      meta:{
+        title:'免费咨询医生列表'
+      }
+    },
+    {
+      path:'/myconsult',
+      component:function (resolve) {
+        require(['./view/myconsult.vue'],resolve)
+      },
+      name:'myconsult',
+      meta:{
+        title:'我的咨询'
+      }
+    },
+    {
+      path:'/orderpay',
+      component:function (resolve) {
+        require(['./view/orderpay.vue'],resolve)
+      },
+      name:'orderpay',
+      meta:{
+        title:'订单支付'
+      }
+    },
+    {
+      path:'/clinic',
+      component:function (resolve) {
+        require(['./view/clinic.vue'],resolve)
+      },
+      name:'clinic',
+      meta:{
+        title:'微诊所'
+      }
+    },
+    {
+      path:'/patientcreate',
+      component:function (resolve) {
+        require(['./view/patientcreate.vue'],resolve)
+      },
+      name:'patientcreate',
+      meta:{
+        title:'添加就诊人'
+      }
     }
   ]
 })

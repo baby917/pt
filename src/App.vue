@@ -48,4 +48,5 @@ export default {
   a{text-decoration: none;color: inherit;}
   button{border:none};
   button,input{outline: none}
+  .clear{clear: both}
 </style>
