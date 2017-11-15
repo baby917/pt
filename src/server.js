@@ -4,17 +4,25 @@
 import axios from 'axios'
 import qs from 'qs'
 import $ from 'jquery'
-
-
+import useragent from './utils/navigate'
+import store from './store/store'
 //预发模式
 const MODEL = 'dev';
 
 //线上模式
 // const MODEL = 'dist';
 
+let APPID;
+if(useragent() == 'wechat'){
+  APPID ==11
+}else if(useragent() == 'heshenghuo'){
+  APPID = 8
+}else {
+  APPID = ''
+}
 let BASEURL,BASEIMGURL,UPLOADIMGURL,FUBASEURL;
 if(MODEL === 'dev'){
-    BASEURL = 'http://59.110.18.99';
+    BASEURL = 'http://dtapi.weixin.leley.org/';
     BASEIMGURL = 'http://img.leley.org/';
     UPLOADIMGURL = 'http://oss.leley.org:8085/';
     FUBASEURL='http://59.110.18.99:8000'
@@ -32,13 +40,18 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
     //在发送请求之前做某件事
-    const defaultParam = {
-        'REQTIME': Date.now()
+    const data = {
+      PHONE:store.state.phone,
+      USERTYPE:2,
+      CTYPE:'web',
+      TOKEN:store.state.token || 'default',
+      APPID:APPID,
+      BODY:JSON.stringify(config.data)
     };
-    config.data=$.extend(true,defaultParam,config.data);
+    // config.data=$.extend(true,defaultParam,config.data);
     // config.data = Object.assign(defaultParam,config.data);
     if(config.method  === 'post'){
-        config.data = qs.stringify(config.data);
+        config.data = qs.stringify(data);
     }
     return config;
 },(error) =>{
@@ -101,7 +114,20 @@ export default {
             url :  BASEURL +'/wxjs/getsign',
             data : data
         })
+    },
+    login(data){//登录
+      return fetch({
+        url: BASEURL + 'v1/llyweb/user/login',
+        data :data
+      })
+    },
+    sendcode(data){//发送验证码
+      return fetch({
+        url: BASEURL + 'v1/llyweb/user/sendCode',
+        data:data
+      })
     }
+
 
 
 }

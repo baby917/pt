@@ -21,6 +21,8 @@
         phone:''
       }
     },
+    created(){
+    },
     computed :{
       isphone(){
         return isPhone(this.phone,'zh-CN')
@@ -47,7 +49,9 @@
         }
       },
       next(){//下一步
-
+        if(this.isphone){
+          this.$router.push('/register/'+this.phone)
+        }
       }
     }
   }

@@ -16,7 +16,7 @@ export default new Router({
       }
     },
     {
-      path:'/register',
+      path:'/register/:phone',
       component:function (resolve) {
         require(['./view/registe.vue'],resolve)
       },
