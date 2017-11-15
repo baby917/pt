@@ -67,7 +67,9 @@ let webpackConfig = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    host : '0.0.0.0',
+    port:'80'
   },
   performance: {
     hints: false

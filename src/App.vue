@@ -17,6 +17,13 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+  beforeCreate(){
+
+//    var _this = this;
+//    setTimeout(function () {
+//      console.log(_this.$route)
+//    },100);
+  },
   created(){
     (function calcHtmlFontSize() {//设置rem
       let width = document.body.clientWidth;
@@ -32,7 +39,7 @@ export default {
     })();
   },
   mounted(){
-//    console.log(this.$store.state.aa)
+
   }
 }
 </script>
@@ -48,4 +55,19 @@ export default {
   button{border:none};
   button,input{outline: none}
   .clear{clear: both}
+
+
+
+  .vux-x-dialog{font-size: 0;}
+  .weui-mask{background: rgba(0,0,0,.3)!important;}
+  .weui-dialog{width: 2.66rem !important;max-width: 2.7rem !important;border-top: 4px solid #00a560}
+  .weui-dialog__hd{padding: .15rem 0 .2rem 0 !important;color: #666;font-size: .18rem}
+  .weui-dialog__bd{font-size: .14rem!important;color: #333!important;padding:0 0 .2rem 0!important;min-height: .14rem!important;}
+  .weui-dialog__bd > div{padding:0 0.12rem;}
+  .weui-dialog__bd > div span{color:#00a560}
+  .weui-dialog__ft{font-size: .18rem!important;}
+  .weui-dialog__btn_default{color: #999 !important;height: .52rem!important;}
+  .weui-dialog__btn_primary{color: #00a560 !important;height: .52rem!important;}
+  .weui-dialog__ft:after{border: none!important;}
+  .weui-dialog__btn:after{border-left: none!important;}
 </style>

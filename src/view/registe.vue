@@ -4,20 +4,21 @@
       验证码发送至:
     </p>
     <div class="phone-code">
-      <span>18280266584</span>
-      <span>获取验证码</span>
+      <span>{{phone}}</span>
+      <span @click="getcode">获取验证码</span>
     </div>
     <div class="get-code">
-      <input type="text" placeholder="请输入验证码">
-      <span>20s</span>
+      <input type="text" placeholder="请输入验证码" v-model="code">
+      <span v-show="time">{{time}}s</span>
     </div>
     <p class="tips">验证码输入错误，请重新输入</p>
-    <button class="btn">注册/登录</button>
-    <check-icon :value.sync="demo1" type="plain">注册即表示，您已阅读并同意 <span>《乐乐医服务协议》</span></check-icon>
+    <button class="btn" @click="login">注册/登录</button>
+    <check-icon :value.sync="agree" type="plain">注册即表示，您已阅读并同意 <span>《乐乐医服务协议》</span></check-icon>
   </div>
 </template>
 
 <script>
+  import api from '../server'
   import {CheckIcon} from 'vux'
   export default {
     components:{
@@ -25,7 +26,53 @@
     },
     data(){
       return {
-        demo1:false
+        phone:'',
+        code:'',
+        time:'',
+        canclick:true,
+        agree:false
+      }
+    },
+    created(){
+      this.phone = this.$route.params.phone//电话
+    },
+    computed:{
+      canlogin(){
+        return (this.code.length>0 && this.agree)
+      }
+    },
+    methods:{
+      getcode(){//获取验证码
+        var _this = this;
+        if(this.canclick){
+          this.canclick = false
+        }else {
+          return false;
+        }
+        this.time = 20;
+        var t=setInterval(function () {
+          if(_this.time>0){
+            _this.time --;
+          }else {
+            clearInterval(t);
+            _this.canclick = true;
+          }
+        },1000);
+        var data = {
+          phone:this.phone
+        };
+        api.sendcode(data).then(function (res) {
+          _this.$vux.toast.text('验证码发送成功','top')
+        })
+      },
+      login(){
+        var data = {
+          cellPhone:this.phone,
+          pwd:this.code
+        };
+        api.login(data).then(function (res) {
+          console.log(res);
+        })
       }
     }
   }
@@ -47,7 +94,7 @@
       span{float: right;font-size: .14rem;color: #666;}
     }
     .tips{
-      font-size: .12rem;color: #F5A623;margin-bottom: .15rem;
+      font-size: .12rem;color: #F5A623;margin-bottom: .15rem;opacity: 0;
     }
     .btn{
       width: 100%;height: .44rem;background: #DFDFDF;border-radius: 4px;font-size: .18rem;color: #fff;margin-bottom: .14rem;
