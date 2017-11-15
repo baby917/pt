@@ -7,137 +7,110 @@
       <!--<div class="right">-->
         <!--<span>科室</span>&emsp;<img src="../assets/icon_zixun_keshi@2x.png" alt="down">-->
       <!--</div>-->
-      <div class="filterdept">
+      <div class="filterdept" @click="filterdept()">
         筛选科室
         <img src="../assets/icon_zixun_keshi@2x.png" alt="down">
       </div>
     </div>
-    <div class="doc-box">
+    <div class="doc-box" v-if="showdoclist" >
       <div class="doc-list">
-        <a class="doc-item">
+        <a class="doc-item" :href="'#/clinic/' + doc.rid" v-for="doc in doclist">
           <div class="doc-img">
-            <img src="../assets/icon_yizhu@2x.png">
+            <img :src="BASEIMGURL + doc.photo" :onerror="defaultImg">
           </div>
           <div class="doc-info">
             <p>
-              <span class="doc-name">杨岗</span>
-              <span class="tag-one">副主任医师</span>
+              <span class="doc-name">{{doc.name}}</span>
+              <span class="tag-one">{{doc.title}}</span>
             </p>
-            <p>四川大学华西医院  小儿外科</p>
-            <p class="good-at">擅长：小儿普外、新生儿外科、小儿普</p>
+            <p>{{doc.hospital}}  {{doc.dept}}</p>
+            <p class="good-at">{{doc.goodat}}</p>
             <p>
-              <i>顶级专家</i> <i>回复快</i>
+              <i v-if="doc.doctortag">{{doc.doctortag}}</i> <i v-if="doc.averagetag">{{doc.averagetag}}</i>
             </p>
             <div class="freebtn">
               <img src="../assets/tag_mianfeizixun.png" alt="">
             </div>
           </div>
         </a>
-      </div>
-      <div class="doc-list">
-        <a class="doc-item">
-          <div class="doc-img">
-            <img src="../assets/icon_yizhu@2x.png">
-          </div>
-          <div class="doc-info">
-            <p>
-              <span class="doc-name">杨岗</span>
-              <span class="tag-one">副主任医师</span>
-            </p>
-            <p>四川大学华西医院  小儿外科</p>
-            <p class="good-at">擅长：小儿普外、新生儿外科、小儿普</p>
-            <p>
-              <i>顶级专家</i> <i>回复快</i>
-            </p>
-            <div class="freebtn">
-              <img src="../assets/tag_mianfeizixun.png" alt="">
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="doc-list">
-        <a class="doc-item">
-          <div class="doc-img">
-            <img src="../assets/icon_yizhu@2x.png">
-          </div>
-          <div class="doc-info">
-            <p>
-              <span class="doc-name">杨岗</span>
-              <span class="tag-one">副主任医师</span>
-            </p>
-            <p>四川大学华西医院  小儿外科</p>
-            <p class="good-at">擅长：小儿普外、新生儿外科、小儿普</p>
-            <p>
-              <i>顶级专家</i> <i>回复快</i>
-            </p>
-            <div class="freebtn">
-              <img src="../assets/tag_mianfeizixun.png" alt="">
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="doc-list">
-        <a class="doc-item">
-          <div class="doc-img">
-            <img src="../assets/icon_yizhu@2x.png">
-          </div>
-          <div class="doc-info">
-            <p>
-              <span class="doc-name">杨岗</span>
-              <span class="tag-one">副主任医师</span>
-            </p>
-            <p>四川大学华西医院  小儿外科</p>
-            <p class="good-at">擅长：小儿普外、新生儿外科、小儿普</p>
-            <p>
-              <i>顶级专家</i> <i>回复快</i>
-            </p>
-            <div class="freebtn">
-              <img src="../assets/tag_mianfeizixun.png" alt="">
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="doc-list">
-        <a class="doc-item">
-          <div class="doc-img">
-            <img src="../assets/icon_yizhu@2x.png">
-          </div>
-          <div class="doc-info">
-            <p>
-              <span class="doc-name">杨岗</span>
-              <span class="tag-one">副主任医师</span>
-            </p>
-            <p>四川大学华西医院  小儿外科</p>
-            <p class="good-at">擅长：小儿普外、新生儿外科、小儿普</p>
-            <p>
-              <i>顶级专家</i> <i>回复快</i>
-            </p>
-            <div class="freebtn">
-              <img src="../assets/tag_mianfeizixun.png" alt="">
-            </div>
-          </div>
-        </a>
-      </div>
     </div>
-    <div class="content dept-list-box">
+    </div>
+    <div class="content dept-list-box" v-if="showdeptlist">
       <div class="left-box">
-        <a href="javascript:;" class="active">内科</a>
-        <a href="javascript:;">儿科</a>
-        <a href="javascript:;">外科</a>
-        <a href="javascript:;">耳鼻咽喉科</a>
+        <a href="javascript:;" :class="{'active':activenum == n.rid}" v-for="n in deptlist" @click="seclectdept(n)" >{{n.name}}</a>
       </div>
       <div class="right-box">
-        <a>内科</a>
-        <a>消化内科</a>
-        <a>心脏内科</a>
-        <a>神经内科</a>
-        <a>内分泌代谢内科</a>
+        <a href="javascirpt:" v-for="n in deptchildrenlist" @click="getdoclist(n.rid)">{{n.name}}</a>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import api from '../server';
+  export  default {
+    data(){
+      return{
+        showdoclist:true,
+        showdeptlist:false,
+        doclist:[],
+        deptlist:[],
+        deptchildrenlist:[],
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        BASEIMGURL:api.BASEIMGURL,
+        activenum:'3',
+        deptid:'',
+      }
+    },
+    mounted(){
+      api.getfreedoclist({
+        "deptid":this.deptid,
+        "freetype":"1",// 义诊类型  2.会员义诊 1.免费义诊
+        "code":1,// 关键字 - 义诊搜索时传
+        "startpageno":"0",// 分页 页码
+        "num":'0',//分页大小
+      }).then(res=>{
+        if(res.code == '000'){
+          this.doclist=JSON.parse(res.data);
 
+        }
+      })
+    },
+    methods:{
+      filterdept(){
+        this.showdoclist=!this.showdoclist;
+        this.showdeptlist=!this.showdeptlist;
+        api.getdepttype({}).then(res=>{
+          if(res.code == '000'){
+            this.deptlist=JSON.parse(res.data);
+            this.deptchildrenlist=this.deptlist[0].children;
+            console.log(this.deptlist)
+
+          }
+        })
+      },
+      seclectdept(item){
+        this.activenum = item.rid;
+        this.deptchildrenlist = item.children;
+        console.log(this.deptchildrenlist)
+      },
+      getdoclist(id){
+        api.getfreedoclist({
+          "deptid":id,
+          "freetype":"1",// 义诊类型  2.会员义诊 1.免费义诊
+          "code":1,// 关键字 - 义诊搜索时传
+          "startpageno":"0",// 分页 页码
+          "num":'0',//分页大小
+        }).then(res=>{
+          if(res.code == '000'){
+            this.doclist=JSON.parse(res.data);
+            console.log(this.doclist)
+          }
+        });
+        this.showdoclist=!this.showdoclist;
+        this.showdeptlist=!this.showdeptlist;
+      }
+    }
+  }
 </script>
 <style lang="less">
   #freedoclist{
@@ -162,8 +135,7 @@
     .doc-item .doc-info i{font-size: 0.12rem;height: 0.16rem;border: 1px solid #6bd1a1;color: #6bd1a1;display: inline-block;text-align: center;line-height: 0.16rem;border-radius: 0.02rem;margin-right: 0.05rem;padding: 0 .03rem;}
     .doc-item .doc-info .freebtn{position: absolute;bottom: .05rem;right: .1rem;}
     .doc-item .doc-info .freebtn img{width: .54rem;height: .18rem;border-radius: 0}
-    .content{background: #fff;font-size: .16rem;height: 100%;position: fixed;width: 100%;max-width: 750px;opacity: 0;visibility:hidden;transition: all .2s ease;}
-    .content.show{opacity: 1;visibility:visible;}
+    .content{background: #fff;font-size: .16rem;height: 100%;width: 100%;max-width: 750px;opacity: 1;visibility:visible;transition: all .2s ease;}
     .content>div{float: left; height: 100%; overflow-x: hidden; overflow-y: auto;}
     .left-box{width: 40%}
     .left-box a{display:block;height: .4rem;text-align: center;color: #666666;width: 100%;border-right: 1px solid rgba(1,1,1,.1);

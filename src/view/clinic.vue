@@ -3,217 +3,254 @@
     <div class="content">
       <div class="doctor-box">
         <div class="doctor-info-box">
-          <img src="../assets/icon_yizhu@2x.png"  alt="">
+          <img :src="BASEIMGURL + doctorInfo.photo" :onerror="defaultImg" alt="医生头像">
           <div class="doctor-info">
-            <p><span class="doc-name">何 森</span> 主治医生</p>
-            <p>在线时间参每天下午5-6点</p>
-            <p><span class="tag" >顶级专家</span><span class="tag" >平均1分4秒回复</span></p>
+            <p><span class="doc-name">{{doctorInfo.name}}</span> {{doctorInfo.title}}</p>
+            <p>{{doctorInfo.servicedesc}}</p>
+            <p><span class="tag" v-if="doctorInfo.doctortag">{{doctorInfo.doctortag}}</span><span class="tag" v-if="doctorInfo.drespond" >{{doctorInfo.drespond}}</span></p>
           </div>
         </div>
         <div class="doc-value">
           <div class="item-value">
-            <p>236</p>
+            <p>{{doctorInfo.servicecount}}</p>
             <span>咨询</span>
           </div>
           <div class="item-value middle">
-            <p>98%</p>
+            <p>{{comment.percent}}%</p>
             <span>好评</span>
           </div>
           <div class="item-value">
-            <p>189</p>
+            <p>{{comment.commentnum}}</p>
             <span>评价</span>
           </div>
         </div>
       </div>
-      <div class="consult-type">
-        <div class="type-item active" >
-          <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment">
-          <i><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
-          <p>图文咨询</p>
-          <p class="tuwenprize">30元/次</p>
-        </div>
-        <div class="type-item">
-          <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient">
-          <p>极速电话</p>
-          <p>8元/分钟</p>
+      <div class="consult-type" v-if="services.length > 0">
+        <div :class="['type-item',{'active':checknum == n}]" v-for="(item,n) in services" @click="checkService(n)">
+          <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment" v-if="item.code =='freeservice'">
+          <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient" v-if="item.code == 'reservationCall'">
+          <i v-if="item.code == 'freeservice' && tuwenShow"><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
+          <p>{{item.name}}</p>
+          <p :class="{'tuwenprize':item.code == 'freeservice'}">{{item.price}}{{item.desc}}</p>
         </div>
       </div>
-      <div class="consult-text">
-        <img src="../assets/tuwendisabled.png" alt=""> 通过图片、文字、语音咨询
+      <div class="consult-text" v-if="checknum == '0'">
+        <img src="../assets/tuwendisabled.png" alt="" > 通过图片、文字、语音咨询
+      </div>
+      <div class="consult-text" v-if="checknum == '1'">
+        <img src="../assets/wzs_icon_phone_small@2x.png" alt="" > 与专家充分沟通
+      </div>
+      <div class="consult-text" >
       </div>
       <div class="divide"></div>
       <div class="dept-info">
         <h5>医院科室</h5>
-        <p>四川大学华西医院 胸外科</p>
+        <p>{{doctorInfo.hospital}} {{doctorInfo.dept}}</p>
       </div>
       <div class="good-at">
         <h5>擅长</h5>
-        <p>心衰、高血压病、冠心病，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员。</p>
+        <p>{{doctorInfo.goodat}}</p>
       </div>
       <div class="text-info">
         <h5>简介</h5>
-        <p>四川大学华西医院心内科，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员，四川省医师协，主治医师。中国医师协会-继发性、难治性高血压工作委。
+        <p>{{doctorInfo.info}}
         </p>
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn">图文咨询（免费）</a>
-    <!--<a class="btn">下载APP体验电话咨询</a>-->
-    <div class="patient-box">
-      <div class="patient-box-content">
-        <p class="title">为谁咨询<a href="">添加</a></p>
-        <div class="patient-list-box">
-          <div class="patient-item">
-            <swipeout>
-              <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
-                <div slot="right-menu">
-                  <swipeout-button @click.native="onButtonClick('delete')" type="warn">
-                    <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                  </swipeout-button>
-                </div>
-                <div slot="content" class="swipe-content">
-                  <div class="patient-name">
-                    姓名<br>
-                    <span class="name">廖天宇</span>
-                    <img src="../assets/jzr_icon_yrz@2x.png" alt="">
+    <a class="btn" @click="tuwenPopup()" v-if="tuwenShow">图文咨询（免费）</a>
+    <a class="btn" v-if="!tuwenShow">下载APP体验电话咨询</a>
+    <popup v-model="show">
+      <div class="patient-box">
+        <div class="patient-box-content">
+          <p class="title">为谁咨询<a href="#/patientcreate">添加</a></p>
+          <div class="patient-list-box">
+            <div class="patient-item">
+              <swipeout>
+                <swipeout-item  transition-mode="follow">
+                  <div slot="right-menu">
+                    <swipeout-button @click.native="deletepic()" type="warn">
+                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                    </swipeout-button>
                   </div>
-                  <div class="paitent-detail">
-                    <p>性别 <span>男</span></p>
-                    <p>年龄 <span>56岁</span></p>
-                    <p>关系 <span>自己</span></p>
+                  <div slot="content" class="swipe-content">
+                    <div class="patient-name">
+                      姓名<br>
+                      <span class="name">廖天宇</span>
+                      <img src="../assets/jzr_icon_yrz@2x.png" alt="">
+                    </div>
+                    <div class="paitent-detail">
+                      <p>性别 <span>男</span></p>
+                      <p>年龄 <span>56岁</span></p>
+                      <p>关系 <span>自己</span></p>
+                    </div>
                   </div>
-                </div>
-              </swipeout-item>
-            </swipeout>
+                </swipeout-item>
+              </swipeout>
+            </div>
+            <div class="patient-item">
+              <swipeout>
+                <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
+                  <div slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick('delete')" type="warn">
+                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                    </swipeout-button>
+                  </div>
+                  <div slot="content" class="swipe-content">
+                    <div class="patient-name">
+                      姓名<br>
+                      <span class="name">廖天宇</span>
+                      <img src="../assets/jzr_icon_yrz@2x.png" alt="">
+                    </div>
+                    <div class="paitent-detail">
+                      <p>性别 <span>男</span></p>
+                      <p>年龄 <span>56岁</span></p>
+                      <p>关系 <span>自己</span></p>
+                    </div>
+                  </div>
+                </swipeout-item>
+              </swipeout>
+            </div>
+            <div class="patient-item">
+              <swipeout>
+                <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
+                  <div slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick('delete')" type="warn">
+                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                    </swipeout-button>
+                  </div>
+                  <div slot="content" class="swipe-content">
+                    <div class="patient-name">
+                      姓名<br>
+                      <span class="name">廖天宇</span>
+                      <img src="../assets/jzr_icon_yrz@2x.png" alt="">
+                    </div>
+                    <div class="paitent-detail">
+                      <p>性别 <span>男</span></p>
+                      <p>年龄 <span>56岁</span></p>
+                      <p>关系 <span>自己</span></p>
+                    </div>
+                  </div>
+                </swipeout-item>
+              </swipeout>
+            </div>
+            <div class="patient-item">
+              <swipeout>
+                <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
+                  <div slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick('delete')" type="warn">
+                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                    </swipeout-button>
+                  </div>
+                  <div slot="content" class="swipe-content">
+                    <div class="patient-name">
+                      姓名<br>
+                      <span class="name">廖天宇</span>
+                      <img src="../assets/weizhenreng.png" alt="">
+                    </div>
+                    <div class="paitent-detail">
+                      <p>性别 <span>男</span></p>
+                      <p>年龄 <span>56岁</span></p>
+                      <p>关系 <span>自己</span></p>
+                    </div>
+                  </div>
+                </swipeout-item>
+              </swipeout>
+            </div>
+            <div class="patient-item">
+              <swipeout>
+                <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
+                  <div slot="right-menu">
+                    <swipeout-button @click.native="onButtonClick('delete')" type="warn">
+                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                    </swipeout-button>
+                  </div>
+                  <div slot="content" class="swipe-content">
+                    <div class="patient-name">
+                      姓名<br>
+                      <span class="name">廖天宇</span>
+                      <img src="../assets/jzr_icon_yrz@2x.png" alt="">
+                    </div>
+                    <div class="paitent-detail">
+                      <p>性别 <span>男</span></p>
+                      <p>年龄 <span>56岁</span></p>
+                      <p>关系 <span>自己</span></p>
+                    </div>
+                  </div>
+                </swipeout-item>
+              </swipeout>
+            </div>
+            <div class="service-promise">
+              服务承诺<br>
+              1、医生在24小时内进行回复，如未回复全额退款。<br>
+              2、有疑问可咨询客服400-181-6160（9:00-22:00）<br>
+            </div>
           </div>
-          <div class="patient-item">
-            <swipeout>
-              <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
-                <div slot="right-menu">
-                  <swipeout-button @click.native="onButtonClick('delete')" type="warn">
-                    <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                  </swipeout-button>
-                </div>
-                <div slot="content" class="swipe-content">
-                  <div class="patient-name">
-                    姓名<br>
-                    <span class="name">廖天宇</span>
-                    <img src="../assets/jzr_icon_yrz@2x.png" alt="">
-                  </div>
-                  <div class="paitent-detail">
-                    <p>性别 <span>男</span></p>
-                    <p>年龄 <span>56岁</span></p>
-                    <p>关系 <span>自己</span></p>
-                  </div>
-                </div>
-              </swipeout-item>
-            </swipeout>
+          <div class="none-patient">
+            <img src="../assets/nonepatient.png" alt=""><br>
+            暂无就诊人信息，请点击右上角创建
           </div>
-          <div class="patient-item">
-            <swipeout>
-              <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
-                <div slot="right-menu">
-                  <swipeout-button @click.native="onButtonClick('delete')" type="warn">
-                    <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                  </swipeout-button>
-                </div>
-                <div slot="content" class="swipe-content">
-                  <div class="patient-name">
-                    姓名<br>
-                    <span class="name">廖天宇</span>
-                    <img src="../assets/jzr_icon_yrz@2x.png" alt="">
-                  </div>
-                  <div class="paitent-detail">
-                    <p>性别 <span>男</span></p>
-                    <p>年龄 <span>56岁</span></p>
-                    <p>关系 <span>自己</span></p>
-                  </div>
-                </div>
-              </swipeout-item>
-            </swipeout>
-          </div>
-          <div class="patient-item">
-            <swipeout>
-              <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
-                <div slot="right-menu">
-                  <swipeout-button @click.native="onButtonClick('delete')" type="warn">
-                    <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                  </swipeout-button>
-                </div>
-                <div slot="content" class="swipe-content">
-                  <div class="patient-name">
-                    姓名<br>
-                    <span class="name">廖天宇</span>
-                    <img src="../assets/weizhenreng.png" alt="">
-                  </div>
-                  <div class="paitent-detail">
-                    <p>性别 <span>男</span></p>
-                    <p>年龄 <span>56岁</span></p>
-                    <p>关系 <span>自己</span></p>
-                  </div>
-                </div>
-              </swipeout-item>
-            </swipeout>
-          </div>
-          <div class="patient-item">
-            <swipeout>
-              <swipeout-item @on-close="handleEvents('on-close')" @on-open="handleEvents('on-open')" transition-mode="follow">
-                <div slot="right-menu">
-                  <swipeout-button @click.native="onButtonClick('delete')" type="warn">
-                    <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                  </swipeout-button>
-                </div>
-                <div slot="content" class="swipe-content">
-                  <div class="patient-name">
-                    姓名<br>
-                    <span class="name">廖天宇</span>
-                    <img src="../assets/jzr_icon_yrz@2x.png" alt="">
-                  </div>
-                  <div class="paitent-detail">
-                    <p>性别 <span>男</span></p>
-                    <p>年龄 <span>56岁</span></p>
-                    <p>关系 <span>自己</span></p>
-                  </div>
-                </div>
-              </swipeout-item>
-            </swipeout>
-          </div>
-          <div class="service-promise">
-            服务承诺<br>
-            1、医生在24小时内进行回复，如未回复全额退款。<br>
-            2、有疑问可咨询客服400-181-6160（9:00-22:00）<br>
-          </div>
-        </div>
-        <div class="none-patient">
-          <img src="../assets/nonepatient.png" alt=""><br>
-          暂无就诊人信息，请点击右上角创建
         </div>
       </div>
-    </div>
+    </popup>
   </section>
 </template>
 <script>
-  import {SwipeoutItem, SwipeoutButton,Swipeout} from 'vux';
+  import {SwipeoutItem, SwipeoutButton,Swipeout,Popup} from 'vux';
+  import api from '../server';
   export default {
     components:{
       SwipeoutItem,
       SwipeoutButton,
-      Swipeout
+      Swipeout,
+      Popup
     },
     data(){
       return {
-
+        show: false,
+        doctorId:this.$route.params.rid,
+        doctorInfo:{},
+        comment:{},
+        BASEIMGURL:api.BASEIMGURL,
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        services:[],
+        checknum:'0',
+        tuwenShow:false
       }
     },
     mounted(){
-
+      api.doctorclinic({doctorid:this.doctorId}).then(res=>{
+        if(res.code == '000'){
+          this.doctorInfo = JSON.parse(res.data);
+          this.comment = this.doctorInfo.comment;
+          let openService=[];
+          this.doctorInfo.services.forEach(function (val) {
+            if(val.code == 'reservationCall'){
+              openService.push(val);
+            }
+            if(val.code == 'freeservice'){
+              openService.push(val);
+            }
+          })
+          this.services = openService
+          console.log(this.services)
+        }
+      })
     },
     methods: {
-      onButtonClick (type) {
-        alert('on button click ' + type)
+      deletepic() {
+        alert('on button click ')
       },
-      handleEvents (type) {
-        console.log('event: ', type)
+      tuwenPopup(){
+        this.show = true;
+      },
+      checkService(num){
+        this.checknum = num;
+        if(num == '0'){
+          this.tuwenShow = true;
+        }else {
+          this.tuwenShow =false;
+        }
       }
 
       },
@@ -223,7 +260,7 @@
 <style lang="less">
   #clinic{font-size: 0.14rem;
     .top{top:0.4rem;}
-    .content{width: 100%;position:absolute;height: calc(~'100% - .9rem');overflow: auto}
+    .content{width: 100%;position:absolute;height: calc(~'100% - .5rem');overflow: auto}
     .doctor-box{height: 1.48rem;background: url("../assets/bg_weizhensuo@2x.png") no-repeat center;background-size: cover;padding-top: 0.15rem;}
     .doctor-info-box{display: flex;height: 0.68rem;width: 100%;}
     .doctor-info-box img{margin-left: 0.1rem;width: 0.66rem;height: 0.66rem;border-radius: 50%;border:0.02rem solid rgba(255,255,255,0.5);}
@@ -242,20 +279,19 @@
     .doc-value .middle:after{content: "";left: auto;right:0}
     .consult-type{height: 1.25rem;padding: 0.17rem 0.12rem .17rem;box-sizing: border-box;display: flex;flex-flow: row nowrap;justify-content: flex-start;align-items: center;border-bottom: 1px solid #E9E9E9;}
     .consult-type .type-item{width: 1.1rem;height: 0.9rem;margin-right: 0.1rem;text-align: center;color: #666;position: relative;border: 1px solid #eee;}
-    .consult-type .type-item.active{border:1px solid #00A560;color: #00A560}
+    .consult-type .type-item.active{border:1px solid #11CC7D;color: #11CC7D}
     .consult-type .type-item.active:before{content: '';position: absolute;left: 0;top:0;width: 0.24rem;height: 0.22rem;background: url("../assets/hlw_gou@2x.png") no-repeat ;background-size: contain}
     .consult-type .type-item.active i{position: absolute;right: .28rem;top:.08rem;width:.28rem;height:.18rem;}
     .consult-type .type-item.active i img{width:.28rem;height:.18rem;}
-    .consult-type .type-item.active p:last-of-type{color: #00A560}
     .consult-type .type-item.active p.tuwenprize{text-decoration: line-through;color: #999999;}
     .consult-type .type-item:only-child{border:1px solid #00A560;color: #00A560}
     .consult-type .type-item:only-child p{color: #00A560}
     .consult-type .type-item:only-child:before{content: '';position: absolute;left: 0;top:0;width: 0.24rem;height: 0.22rem;background: url("../assets/hlw_gou@2x.png") no-repeat ;background-size: contain}
     .appointment{width: 0.18rem;height: 0.18rem;padding-top: 0.18rem;}
-    .outpatient{width: 0.18rem;height: 0.24rem;padding-top: 0.1rem;}
+    .outpatient{width: 0.18rem;height: 0.18rem;padding-top: 0.18rem;}
     .type-item p:first-of-type{font-size: 0.14rem;}
     .type-item p:last-of-type{font-size: 0.12rem;color: #999}
-    .consult-text{height: .44rem;text-align: center;line-height: .44rem;font-size: 14px;color: #666666;}
+    .consult-text{text-align: center;line-height: .44rem;font-size: .14rem;color: #666666;}
     .consult-text img{width: .12rem;height: .12rem;vertical-align: middle}
     .divide{height: .1rem;width: 100%;background-color: #eee}
     .dept-info{min-height: 0.65rem;margin-left: 0.12rem;overflow: hidden;border-bottom: 1px solid #e9e9e9;}
@@ -266,8 +302,8 @@
     .btn{width: 100%;height: 0.49rem;line-height: 0.49rem;display: block;text-align: center;font-size: 0.18rem;background: #00A560;position: fixed;left: 0;bottom: 0;color: #ffffff;z-index: 100}
 
   }
-  .patient-box{position: fixed;background-color: rgba(0,0,0,.5);width: 100%;height: 100%;z-index: 122;}
-  .patient-box .patient-box-content{width: 100%;position: absolute;bottom:0;height: 77%;background-color: #F6F6F6;}
+  .patient-box{width: 100%;height: 100%;overflow: hidden}
+  .patient-box .patient-box-content{width: 100%;height: 5.2rem;background-color: #F6F6F6;}
   .patient-box .patient-box-content p{height: .4rem;line-height:.4rem;text-align: center;font-size: .16rem;color: #666666;position: relative;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.10);background-color: #fff}
   .patient-box .patient-box-content p a{position: absolute;width: .54rem;height: .24rem;line-height:.24rem;margin-top:.08rem;font-size: .14rem;color: #00A560;border: 1px solid #00A560;border-radius: 2px;right: .12rem;}
   .patient-box .patient-box-content .patient-list-box{box-sizing: border-box;padding: .1rem .1rem 0;height: 4rem;overflow-y: auto;}
@@ -291,13 +327,13 @@
 
   .vux-swipeout-button-warn{background-color: #F6F6F6!important;}
   .vux-swipeout-button img{width: .48rem;height: .48rem;vertical-align: middle}
-  .weui-dialog__bd:first-child{padding: 0.28rem 0.2rem 0.4rem !important;}
-  .weui-dialog{width: 2.66rem !important;height: 1.52rem !important;}
-  .weui-dialog__btn_primary{color: #00A560 !important;}
-  .weui-dialog__btn_default{color: #666 !important;}
-  .weui-dialog__hd{padding: 0.2rem 0.2rem 0.1rem !important;font-size: 0.16rem !important;}
-  .weui-dialog__title{color:#333;font-size: 0.14rem}
-  .weui-dialog__btn{font-size: .18rem;display: block;}
-  .weui-dialog__ft{height: .44rem;line-height: .44rem}
+  /*.weui-dialog__bd:first-child{padding: 0.28rem 0.2rem 0.4rem !important;}*/
+  /*.weui-dialog{width: 2.66rem !important;height: 1.52rem !important;}*/
+  /*.weui-dialog__btn_primary{color: #00A560 !important;}*/
+  /*.weui-dialog__btn_default{color: #666 !important;}*/
+  /*.weui-dialog__hd{padding: 0.2rem 0.2rem 0.1rem !important;font-size: 0.16rem !important;}*/
+  /*.weui-dialog__title{color:#333;font-size: 0.14rem}*/
+  /*.weui-dialog__btn{font-size: .18rem;display: block;}*/
+  /*.weui-dialog__ft{height: .44rem;line-height: .44rem}*/
 
 </style>
