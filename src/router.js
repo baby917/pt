@@ -94,6 +94,28 @@ export default new Router({
       meta:{
         title:'添加就诊人'
       }
+    },
+    {
+      path:'/paysuccess',
+      component:function (resolve) {
+        require(['./view/paysuccess.vue'],resolve)
+      },
+      name:'paysuccess',
+      meta:{
+        title:'支付成功'
+      }
+    },
+    {
+      path:'/historyconsult',
+      component:function (resolve) {
+        require(['./view/historyconsult.vue'],resolve)
+      },
+      name:'historyconsult',
+      meta:{
+        title:'历史咨询'
+      }
     }
+
+
   ]
 })
