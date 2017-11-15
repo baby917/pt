@@ -76,7 +76,7 @@ export default new Router({
       }
     },
     {
-      path:'/clinic',
+      path:'/clinic/:rid',
       component:function (resolve) {
         require(['./view/clinic.vue'],resolve)
       },

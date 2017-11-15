@@ -126,6 +126,24 @@ export default {
         url: BASEURL + 'v1/llyweb/user/sendCode',
         data:data
       })
+    },
+    getfreedoclist(data){//医生列表
+      return fetch({
+        url: BASEURL + '/v1/llyweb/doctor/freeList',
+        data:data
+      })
+  },
+    getdepttype(data){//科室列表
+      return fetch({
+        url: BASEURL + '/v1/llyweb/doctor/depttype',
+        data:data
+      })
+    },
+    doctorclinic(data){//医生微诊所
+      return fetch({
+        url: BASEURL + '/v1/llyweb/doctor/doctorMicroClinic',
+        data:data
+      })
     }
 
 

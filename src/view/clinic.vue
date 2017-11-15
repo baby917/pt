@@ -3,65 +3,63 @@
     <div class="content">
       <div class="doctor-box">
         <div class="doctor-info-box">
-          <img src="../assets/icon_yizhu@2x.png"  alt="">
+          <img :src="BASEIMGURL + doctorInfo.photo" :onerror="defaultImg" alt="医生头像">
           <div class="doctor-info">
-            <p><span class="doc-name">何 森</span> 主治医生</p>
-            <p>在线时间参每天下午5-6点</p>
-            <p><span class="tag" >顶级专家</span><span class="tag" >平均1分4秒回复</span></p>
+            <p><span class="doc-name">{{doctorInfo.name}}</span> {{doctorInfo.title}}</p>
+            <p>{{doctorInfo.servicedesc}}</p>
+            <p><span class="tag" v-if="doctorInfo.doctortag">{{doctorInfo.doctortag}}</span><span class="tag" v-if="doctorInfo.drespond" >{{doctorInfo.drespond}}</span></p>
           </div>
         </div>
         <div class="doc-value">
           <div class="item-value">
-            <p>236</p>
+            <p>{{doctorInfo.servicecount}}</p>
             <span>咨询</span>
           </div>
           <div class="item-value middle">
-            <p>98%</p>
+            <p>{{comment.percent}}%</p>
             <span>好评</span>
           </div>
           <div class="item-value">
-            <p>189</p>
+            <p>{{comment.commentnum}}</p>
             <span>评价</span>
           </div>
         </div>
       </div>
-      <div class="consult-type">
-        <div class="type-item active" >
-          <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment">
-          <i><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
-          <p>图文咨询</p>
-          <p class="tuwenprize">30元/次</p>
-        </div>
-        <div class="type-item">
-          <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient">
-          <p>极速电话</p>
-          <p>8元/分钟</p>
+      <div class="consult-type" v-if="services.length > 0">
+        <div :class="['type-item',{'active':checknum == n}]" v-for="(item,n) in services" @click="checkService(n)">
+          <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment" v-if="item.code =='freeservice'">
+          <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient" v-if="item.code == 'reservationCall'">
+          <i v-if="item.code == 'freeservice' && tuwenShow"><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
+          <p>{{item.name}}</p>
+          <p :class="{'tuwenprize':item.code == 'freeservice'}">{{item.price}}{{item.desc}}</p>
         </div>
       </div>
-      <div class="consult-text" style="display: none">
-        <img src="../assets/tuwendisabled.png" alt=""> 通过图片、文字、语音咨询
+      <div class="consult-text" v-if="checknum == '0'">
+        <img src="../assets/tuwendisabled.png" alt="" > 通过图片、文字、语音咨询
+      </div>
+      <div class="consult-text" v-if="checknum == '1'">
+        <img src="../assets/wzs_icon_phone_small@2x.png" alt="" > 与专家充分沟通
       </div>
       <div class="consult-text" >
-        <img src="../assets/wzs_icon_phone_small@2x.png" alt=""> 与专家充分沟通
       </div>
       <div class="divide"></div>
       <div class="dept-info">
         <h5>医院科室</h5>
-        <p>四川大学华西医院 胸外科</p>
+        <p>{{doctorInfo.hospital}} {{doctorInfo.dept}}</p>
       </div>
       <div class="good-at">
         <h5>擅长</h5>
-        <p>心衰、高血压病、冠心病，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员。</p>
+        <p>{{doctorInfo.goodat}}</p>
       </div>
       <div class="text-info">
         <h5>简介</h5>
-        <p>四川大学华西医院心内科，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员，四川省医师协，主治医师。中国医师协会-继发性、难治性高血压工作委。四川大学华西医院心内科，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员，四川省医师协，主治医师。中国医师协会-继发性、难治性高血压工作委。四川大学华西医院心内科，主治医师。中国医师协会-继发性、难治性高血压工作委员会委员，四川省医师协，主治医师。中国医师协会-继发性、难治性高血压工作委。
+        <p>{{doctorInfo.info}}
         </p>
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup()">图文咨询（免费）</a>
-    <!--<a class="btn">下载APP体验电话咨询</a>-->
+    <a class="btn" @click="tuwenPopup()" v-if="tuwenShow">图文咨询（免费）</a>
+    <a class="btn" v-if="!tuwenShow">下载APP体验电话咨询</a>
     <popup v-model="show">
       <div class="patient-box">
         <div class="patient-box-content">
@@ -199,6 +197,7 @@
 </template>
 <script>
   import {SwipeoutItem, SwipeoutButton,Swipeout,Popup} from 'vux';
+  import api from '../server';
   export default {
     components:{
       SwipeoutItem,
@@ -209,10 +208,34 @@
     data(){
       return {
         show: false,
+        doctorId:this.$route.params.rid,
+        doctorInfo:{},
+        comment:{},
+        BASEIMGURL:api.BASEIMGURL,
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        services:[],
+        checknum:'0',
+        tuwenShow:false
       }
     },
     mounted(){
-
+      api.doctorclinic({doctorid:this.doctorId}).then(res=>{
+        if(res.code == '000'){
+          this.doctorInfo = JSON.parse(res.data);
+          this.comment = this.doctorInfo.comment;
+          let openService=[];
+          this.doctorInfo.services.forEach(function (val) {
+            if(val.code == 'reservationCall'){
+              openService.push(val);
+            }
+            if(val.code == 'freeservice'){
+              openService.push(val);
+            }
+          })
+          this.services = openService
+          console.log(this.services)
+        }
+      })
     },
     methods: {
       deletepic() {
@@ -221,6 +244,14 @@
       tuwenPopup(){
         this.show = true;
       },
+      checkService(num){
+        this.checknum = num;
+        if(num == '0'){
+          this.tuwenShow = true;
+        }else {
+          this.tuwenShow =false;
+        }
+      }
 
       },
 
@@ -252,7 +283,6 @@
     .consult-type .type-item.active:before{content: '';position: absolute;left: 0;top:0;width: 0.24rem;height: 0.22rem;background: url("../assets/hlw_gou@2x.png") no-repeat ;background-size: contain}
     .consult-type .type-item.active i{position: absolute;right: .28rem;top:.08rem;width:.28rem;height:.18rem;}
     .consult-type .type-item.active i img{width:.28rem;height:.18rem;}
-    .consult-type .type-item.active p:last-of-type{color: #00A560}
     .consult-type .type-item.active p.tuwenprize{text-decoration: line-through;color: #999999;}
     .consult-type .type-item:only-child{border:1px solid #00A560;color: #00A560}
     .consult-type .type-item:only-child p{color: #00A560}
@@ -261,7 +291,7 @@
     .outpatient{width: 0.18rem;height: 0.18rem;padding-top: 0.18rem;}
     .type-item p:first-of-type{font-size: 0.14rem;}
     .type-item p:last-of-type{font-size: 0.12rem;color: #999}
-    .consult-text{height: .44rem;text-align: center;line-height: .44rem;font-size: .14rem;color: #666666;}
+    .consult-text{text-align: center;line-height: .44rem;font-size: .14rem;color: #666666;}
     .consult-text img{width: .12rem;height: .12rem;vertical-align: middle}
     .divide{height: .1rem;width: 100%;background-color: #eee}
     .dept-info{min-height: 0.65rem;margin-left: 0.12rem;overflow: hidden;border-bottom: 1px solid #e9e9e9;}
