@@ -14,7 +14,7 @@ const MODEL = 'dev';
 
 let APPID;
 if(useragent() == 'wechat'){
-  APPID ==11
+  APPID =11
 }else if(useragent() == 'heshenghuo'){
   APPID = 8
 }else {
@@ -77,7 +77,7 @@ const errorAlert = function (errorStr) {
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) =>{
     if(res.data && res.data.code!== '000'
-        && res.request.responseURL.indexOf('wxjs/getOpenId') < 0
+        && res.request.responseURL.indexOf('v1/llyweb/user/getopenid') < 0
         && res.request.responseURL.indexOf('wxUser/bindingPhone') < 0
     ){
         errorAlert(res.data.msg || '接口请求失败');
@@ -109,6 +109,12 @@ export default {
     BASEURL,
     BASEIMGURL,
     UPLOADIMGURL,
+    getOpenId(data){//微信获取openid 等信息
+      return fetch({
+        url: BASEURL + 'v1/llyweb/user/getopenid',
+        data: data
+      })
+    },
     getWxConfig(data){  //获取微信签名
         return fetch({
             url :  BASEURL +'/wxjs/getsign',
