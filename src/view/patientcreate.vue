@@ -39,6 +39,7 @@
 </template>
 <script>
     import {PopupPicker,Datetime,Alert} from 'vux';
+    import api from '../server';
     export default {
       components:{
         PopupPicker,
@@ -52,7 +53,7 @@
           sexDefault:[],
           relationDefault:[],
           birthday:new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDay(),
-          relation:[['配偶','子','女','孙子、孙女或外孙子、外孙女','父母','祖父母或外祖父母','兄、弟、姐、妹','其他']],
+          relation:[['自己','父亲','母亲','配偶 ','儿子','女儿','兄弟','姐妹','亲戚','朋友','其他']],
         }
       },
       methods:{
@@ -82,6 +83,17 @@
             })
             return false;
           }
+          var patientsDetail={
+            "name":this.name,
+            "sex":this.sexDefault.toString(),
+            "birthday":this.birthday,
+            "relation":this.relationDefault.toString()
+          };
+          api.addpatient(patientsDetail).then(res=>{
+            if(res.code == '000'){
+              history.go(-1);
+            }
+          })
         }
       }
     }

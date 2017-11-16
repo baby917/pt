@@ -18,7 +18,7 @@ if(useragent() == 'wechat'){
 }else if(useragent() == 'heshenghuo'){
   APPID = 8
 }else {
-  APPID = ''
+  APPID = 7
 }
 let BASEURL,BASEIMGURL,UPLOADIMGURL,FUBASEURL;
 if(MODEL === 'dev'){
@@ -144,7 +144,33 @@ export default {
         url: BASEURL + '/v1/llyweb/doctor/doctorMicroClinic',
         data:data
       })
-    }
+    },
+    getpatients(data){//患者列表
+        return fetch({
+          url: BASEURL + '/v1/llyweb/patient/pmypatients',
+          data:data
+        })
+    },
+    addpatient(data){//添加患者
+      return fetch({
+        url: BASEURL + '/v1/llyweb/patient/pmypatientsadd',
+        data:data
+      })
+    },
+    deletepatient(data){//删除患者
+      return fetch({
+        url: BASEURL + '/v1/llyweb/patient/pmypatientsdelete',
+        data:data
+      })
+    },
+    ordercreate(data){//生成订单
+      return fetch({
+        url: BASEURL + '/v1/llyweb/doctor/orderspecialtygeneration',
+        data:data
+      })
+    },
+
+
 
 
 
