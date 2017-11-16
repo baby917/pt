@@ -29,7 +29,7 @@
         <div :class="['type-item',{'active':checknum == n}]" v-for="(item,n) in services" @click="checkService(n)">
           <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment" v-if="item.code =='freeservice'">
           <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient" v-if="item.code == 'reservationCall'">
-          <i v-if="item.code == 'freeservice' && tuwenShow"><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
+          <i v-if="checknum == '0' && item.code =='freeservice'"><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
           <p>{{item.name}}</p>
           <p :class="{'tuwenprize':item.code == 'freeservice'}">{{item.price}}{{item.desc}}</p>
         </div>
@@ -58,8 +58,8 @@
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup()" v-if="tuwenShow">图文咨询（免费）</a>
-    <a class="btn" v-if="!tuwenShow">下载APP体验电话咨询</a>
+    <a class="btn" @click="tuwenPopup()" v-if="tuwenBtnShow">图文咨询（免费）</a>
+    <a class="btn" v-if="!tuwenBtnShow" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="show">
       <div class="patient-box">
         <div class="patient-box-content">
@@ -215,13 +215,15 @@
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         services:[],
         checknum:'0',
-        tuwenShow:false
+        tuwenShow:false,
+        tuwenBtnShow:true
       }
     },
     mounted(){
       api.doctorclinic({doctorid:this.doctorId}).then(res=>{
         if(res.code == '000'){
           this.doctorInfo = JSON.parse(res.data);
+          console.log(this.doctorInfo);
           this.comment = this.doctorInfo.comment;
           let openService=[];
           this.doctorInfo.services.forEach(function (val) {
@@ -248,8 +250,10 @@
         this.checknum = num;
         if(num == '0'){
           this.tuwenShow = true;
+          this.tuwenBtnShow = true;
         }else {
           this.tuwenShow =false;
+          this.tuwenBtnShow = false;
         }
       }
 
@@ -298,7 +302,6 @@
     h5{color: #999;line-height: 0.3rem;font-weight: normal;padding-top: 0.05rem;}
     h5 + p{font-size: 0.14rem;color: #666}
     .good-at,.text-info{margin-left: 0.12rem;overflow: hidden;border-bottom: 1px solid #e9e9e9;padding-bottom: 0.12rem;}
-    .text-info{margin-bottom: 0.6rem;}
     .btn{width: 100%;height: 0.49rem;line-height: 0.49rem;display: block;text-align: center;font-size: 0.18rem;background: #00A560;position: fixed;left: 0;bottom: 0;color: #ffffff;z-index: 100}
 
   }

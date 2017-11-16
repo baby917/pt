@@ -60,14 +60,23 @@ export default {
 
   .vux-x-dialog{font-size: 0;}
   .weui-mask{background: rgba(0,0,0,.3)!important;}
-  .weui-dialog{width: 2.66rem !important;max-width: 2.7rem !important;border-top: 4px solid #00a560}
-  .weui-dialog__hd{padding: .15rem 0 .2rem 0 !important;color: #666;font-size: .18rem}
-  .weui-dialog__bd{font-size: .14rem!important;color: #333!important;padding:0 0 .2rem 0!important;min-height: .14rem!important;}
-  .weui-dialog__bd > div{padding:0 0.12rem;}
-  .weui-dialog__bd > div span{color:#00a560}
-  .weui-dialog__ft{font-size: .18rem!important;}
-  .weui-dialog__btn_default{color: #999 !important;height: .52rem!important;}
-  .weui-dialog__btn_primary{color: #00a560 !important;height: .52rem!important;}
-  .weui-dialog__ft:after{border: none!important;}
-  .weui-dialog__btn:after{border-left: none!important;}
+  /*.weui-dialog{width: 2.66rem !important;max-width: 2.7rem !important;border-top: 4px solid #00a560}*/
+  /*.weui-dialog__hd{padding: .15rem 0 .2rem 0 !important;color: #666;font-size: .18rem}*/
+  /*.weui-dialog__bd{font-size: .14rem!important;color: #333!important;padding:0 0 .2rem 0!important;min-height: .14rem!important;}*/
+  .weui-dialog__hd {
+    padding: 0.2em 1em 0.2em !important;
+  }
+  .weui-dialog__bd{
+    font-size: .16rem!important;
+  }
+  .weui-dialog__bd{
+    padding: 1.6em 1.6em 0.8em;
+  }
+  /*.weui-dialog__bd > div{padding:0 0.12rem;}*/
+  /*.weui-dialog__bd > div span{color:#00a560}*/
+  /*.weui-dialog__ft{font-size: .18rem!important;}*/
+  /*.weui-dialog__btn_default{color: #999 !important;height: .52rem!important;}*/
+  /*.weui-dialog__btn_primary{color: #00a560 !important;height: .52rem!important;}*/
+  /*.weui-dialog__ft:after{border: none!important;}*/
+  /*.weui-dialog__btn:after{border-left: none!important;}*/
 </style>
