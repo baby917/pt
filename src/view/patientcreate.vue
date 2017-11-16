@@ -155,10 +155,5 @@
     }
 
   }
-  .weui-dialog__hd {
-    padding: 0.2em 1em 0.2em !important;
-  }
-  .weui-dialog__bd{
-    font-size: .16rem!important;
-  }
+
 </style>
