@@ -7,8 +7,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state:{
     userAgent:userAgent(),
-    token:'bf4eec0b5f8b4005a431f08f6ef900fd1510818397372',
-    phone:'13709062737',
+    token:'a1b29b2581b448d7b3acad1e43e047ae1510797690378',
+    phone:'18602825020',
     openid:""
   }
 });
