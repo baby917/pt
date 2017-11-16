@@ -7,12 +7,12 @@
       <span>{{phone}}</span>
       <span @click="getcode">获取验证码</span>
     </div>
-    <div class="get-code">
-      <input type="text" placeholder="请输入验证码" v-model="code">
+    <div class="get-code" :class="{'active':canlogin}">
+      <input type="text" placeholder="请输入验证码" v-model="code" maxlength="6">
       <span v-show="time">{{time}}s</span>
     </div>
     <p class="tips">验证码输入错误，请重新输入</p>
-    <button class="btn" @click="login">注册/登录</button>
+    <button class="btn" :class="{'active':canlogin}" @click="login">注册/登录</button>
     <check-icon :value.sync="agree" type="plain">注册即表示，您已阅读并同意 <span>《乐乐医服务协议》</span></check-icon>
   </div>
 </template>
@@ -30,7 +30,7 @@
         code:'',
         time:'',
         canclick:true,
-        agree:false
+        agree:true
       }
     },
     created(){
@@ -66,13 +66,15 @@
         })
       },
       login(){
-        var data = {
-          cellPhone:this.phone,
-          pwd:this.code
-        };
-        api.login(data).then(function (res) {
-          console.log(res);
-        })
+        if(this.canlogin){
+          var data = {
+            cellPhone:this.phone,
+            code:this.code
+          };
+          api.login(data).then(function (res) {
+            console.log(res);
+          })
+        }
       }
     }
   }
@@ -89,6 +91,7 @@
       span:last-child{float: right;font-size: .14rem;color: #00a560}
     }
     .get-code{
+      &.active{border-color: #00a560}
       width: 100%;overflow: hidden;padding-bottom: .08rem;border-bottom: 2px solid #dfdfdf;margin-bottom: .08rem;
       input{float: left;border: none;font-size: .16rem;color: #00a560;}
       span{float: right;font-size: .14rem;color: #666;}
@@ -97,6 +100,7 @@
       font-size: .12rem;color: #F5A623;margin-bottom: .15rem;opacity: 0;
     }
     .btn{
+      &.active{background-color: #00a560}
       width: 100%;height: .44rem;background: #DFDFDF;border-radius: 4px;font-size: .18rem;color: #fff;margin-bottom: .14rem;
     }
     [class^="weui-icon-"]:before, [class*=" weui-icon-"]:before{margin-left: 0;}

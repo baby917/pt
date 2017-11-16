@@ -32,7 +32,7 @@
           paramObj[item.split('=')[0]] = item.split('=')[1];
         });
       };
-      if(bower == 'wechat'){
+      if(bower == 'wechat'){//微信时的登录
         if(!paramObj.code){
           const href = encodeURIComponent(location.origin + '/' + location.hash);
           let appid = '';
@@ -83,9 +83,32 @@
           },0)
 
         }
+      }else if(bower == 'heshenghuo'){//和生活的登录
+          var s = $("#s").val();
+          try {
+            if (hsh.isApp) {
+              hsh.hshReady(function () {
+                hsh.getToken(function (obj) {
+                  if(obj != null && obj != ''){
+                    hbxLogin(obj.HARToken, s);
+                  }
+                });
+              })
+            }
+          } catch(e){ console.log(e)}
+//        });
+
+        function hbxLogin(token,s){
+            alert(token);
+          api.login({token:token}).then(function (res) {
+            alert(JSON.parse(res.data))
+          })
+        }
+      }else {
+        setTimeout(function () {
+          _this.appShow = true;
+        },0)
       }
-
-
     },
     created(){
       (function calcHtmlFontSize() {//设置rem

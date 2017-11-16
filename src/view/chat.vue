@@ -12,9 +12,9 @@
               <div class="content" v-if="one.type==='text'">
                 {{one.value}}
               </div>
-              <!--<div class="content" v-if="one.type==='image'">-->
-                <!--<img :src="one.value" @click="previewImage($event)" :data-src="one.value" style="width: 1rem;" alt="error">-->
-              <!--</div>-->
+              <div class="content" v-if="one.type==='image'">
+                <img :src="one.value"  style="width: 1rem;" alt="error">
+              </div>
               <!--<div class="content" v-if="one.type==='record'" :style="'width:'+one.w+'rem'">-->
                 <!--<span class="duration">{{one.duration}}</span>-->
                 <!--<button @click="playMp3($event)"></button>-->
@@ -25,10 +25,10 @@
                 <!--<span class="duration" v-show="!one.load">{{one.duration}}</span>-->
                 <!--<button @click="myaudio(one.value,$event,one.load)"></button>-->
               <!--</div>-->
-              <!--<div class="content" v-if="one.type==='metext'">-->
+              <div class="content" v-if="one.type==='metext'">
                 <!--<img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">-->
-                <!--{{one.value}}-->
-              <!--</div>-->
+                {{one.value}}
+              </div>
               <!--<div class="content" v-if="one.type==='card'">-->
                 <!--<div class="card-box" @click="clinic(one.value.r)">-->
                   <!--<p class="card-title">名片</p>-->
@@ -56,7 +56,7 @@
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
         <x-icon type="ios-plus-outline" class="plus"></x-icon>
-        <div >发送</div>
+        <div @click="sendmessage">发送</div>
       </div>
       <!--<div class="no-click" v-show="canClick"></div>-->
     </div>
@@ -73,9 +73,20 @@
     data(){
       return {
         chatList:[
-          {user:'doc',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'123'}
+          {user:'doc',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'123',type:'text'},
+          {user:'doc',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'src/assets/portrait@2x.png',type:'image'},
+          {user:'me',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'src/assets/portrait@2x.png',type:'metext'}
         ],
         inputText:''
+      }
+    },
+    methods:{
+      sendmessage(){
+        var _this = this;
+        var item = {
+          user:'me',date:'2017-11-17',url:'src/assets/portrait@2x.png',value:this.inputText,type:'text'
+        };
+        this.chatList.push(item)
       }
     }
   }

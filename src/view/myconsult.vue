@@ -16,7 +16,7 @@
           </div>
         </a>
       </div>
-      <div class="consult-list">
+      <div class="consult-list" v-for="n in consList">
         <a href="javascript:void(0)" class="consult-item">
           <div class="icon-pic">
             <img src="../assets/icon_yizhu@2x.png" alt="">
@@ -35,6 +35,23 @@
   </div>
 </template>
 <script>
+  import api from '../server'
+  export default {
+    data(){
+      return{
+        consList:[]
+      }
+    },
+    created(){
+      var _this = this;
+      api.getmyconsult({}).then(function (res) {
+        if(res.code === '000'){
+          console.log(JSON.parse(res.data));
+          _this.consList = JSON.parse(res.data);
+        }
+      })
+    }
+  }
 
 </script>
 <style lang="less">

@@ -18,7 +18,7 @@ if(useragent() == 'wechat'){
 }else if(useragent() == 'heshenghuo'){
   APPID = 8
 }else {
-  APPID = ''
+  APPID = 7
 }
 let BASEURL,BASEIMGURL,UPLOADIMGURL,FUBASEURL;
 if(MODEL === 'dev'){
@@ -123,8 +123,14 @@ export default {
     },
     login(data){//登录
       return fetch({
-        url: BASEURL + 'v1/llyweb/user/login',
+        url: BASEURL + 'v1/llyweb/user/register',
         data :data
+      })
+    },
+    hshlogin(data){//和生活登录
+      return fetch({
+        url : BASEURL + 'v1/llyweb/user/login',
+        data : data
       })
     },
     sendcode(data){//发送验证码
@@ -149,6 +155,12 @@ export default {
       return fetch({
         url: BASEURL + '/v1/llyweb/doctor/doctorMicroClinic',
         data:data
+      })
+    },
+    getmyconsult(data){//获取我的咨询
+      return fetch({
+        url: BASEURL + 'v1/llyweb/service/pbackloglist',
+        data : data
       })
     }
 
