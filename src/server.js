@@ -193,6 +193,12 @@ export default {
         data:data
       })
     },
+    paycallback(data) { //订单处理
+      return fetch({
+        url: BASEURL + '/v1/llyweb/order/paycallback',
+        data:data
+      })
+    },
     getmsg(data) { //拉取消息
       return fetch({
         url: BASEURL + '/v1/llyweb/msg/getMsg',
@@ -205,6 +211,8 @@ export default {
         data:data
       })
     }
+
+
 
 
 
