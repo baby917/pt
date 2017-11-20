@@ -19,6 +19,7 @@
 
 <script>
   import api from '../server'
+  import navigate from '../utils/navigate'
   import {CheckIcon} from 'vux'
   export default {
     components:{
@@ -66,16 +67,29 @@
         })
       },
       login(){
+        var _this = this;
         if(this.canlogin){
+          var openid;
+          if(navigate() == 'wechat'){
+            openid = _this.$store.state.openid;
+          }
           var data = {
             cellPhone:this.phone,
-            code:this.code
+            code:this.code,
+            openId:openid
           };
           api.login(data).then(function (res) {
             if(res.code == '000'){
-              var userInfo=JSON.parse(res.data);
+              var data=JSON.parse(res.data);
+              _this.$store.state.token = localStorage.token = data.token || '';
+              _this.$store.state.phone = localStorage.phone = data.cellPhone || '';
+              var routername = _this.$route.params.routername;
+              if(routername){//如果是其他页面跳过来登录的。
+                location.href = '#/'+decodeURIComponent(routername)
+              }else {
+
+              }
             }
-            console.log(res);
           })
         }
       }

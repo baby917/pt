@@ -32,6 +32,18 @@
           paramObj[item.split('=')[0]] = item.split('=')[1];
         });
       };
+      if(api.MODEL == 'dev'){
+        if(localStorage.openid){
+          _this.$store.state.openid = localStorage.openid;
+        }
+        if(localStorage.token){
+          _this.$store.state.token = localStorage.token;
+        }
+        if(localStorage.phone){
+          _this.$store.state.phone = localStorage.phone;
+        }
+      }
+
       if(bower == 'wechat'){//微信时的登录
         if(!paramObj.code){
           const href = encodeURIComponent(location.origin + '/' + location.hash);
@@ -84,26 +96,33 @@
 
         }
       }else if(bower == 'heshenghuo'){//和生活的登录
+          setTimeout(function () {
+            _this.appShow = true;
+          },0);
           var s = $("#s").val();
-          try {
+          $(function () {
             if (hsh.isApp) {
               hsh.hshReady(function () {
                 hsh.getToken(function (obj) {
                   if(obj != null && obj != ''){
                     hbxLogin(obj.HARToken, s);
+                  }else {//和生活登录失败
+                    var routername = _this.$route.name;
+                    location.href = '#/login/'+encodeURIComponent(routername)
                   }
                 });
+              });
+            }
+            function hbxLogin(token,s){
+              api.hshlogin({token:token}).then(function (res) {
+                if(res.code === '000'){
+                  var data = JSON.parse(res.data);
+                  _this.$store.state.token = localStorage.token = data.token || '';
+                  _this.$store.state.phone = localStorage.phone = data.cellPhone || '';
+                }
               })
             }
-          } catch(e){ console.log(e)}
-//        });
-
-        function hbxLogin(token,s){
-            alert(token);
-          api.login({token:token}).then(function (res) {
-            alert(JSON.parse(res.data))
           })
-        }
       }else {
         setTimeout(function () {
           _this.appShow = true;

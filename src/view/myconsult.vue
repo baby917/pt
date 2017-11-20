@@ -17,7 +17,7 @@
         </a>
       </div>
       <div class="consult-list" v-for="n in consList">
-        <a href="javascript:void(0)" class="consult-item">
+        <a :href="'#/chat/'+n.servicedetailid" class="consult-item">
           <div class="icon-pic">
             <img :src="BASEIMGURL + n.doctorphoto" alt="" :onerror="defaultImg">
           </div>
@@ -36,6 +36,8 @@
 </template>
 <script>
   import api from '../server'
+  import {mapState} from 'vuex'
+  import navigate from '../utils/navigate'
   export default {
     data(){
       return{
@@ -44,14 +46,51 @@
         BASEIMGURL:api.BASEIMGURL,
       }
     },
+    computed:{
+      ...mapState({
+        token:state=>state.token
+      })
+    },
+    watch:{
+      token(){
+        if(this.$store.state.phone && this.$store.state.token){
+          this.getlist();
+        }else {
+          var routername = this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
     created(){
       var _this = this;
-      api.getmyconsult({}).then(function (res) {
-        if(res.code === '000'){
-          console.log(JSON.parse(res.data));
-          _this.consList = JSON.parse(res.data);
+      if(this.$store.state.prefrom){//如果不是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getlist();
+        }else {//不是第一次进来如果没有登录跳去登录
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
         }
-      })
+      }else {//如果是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getlist();
+        }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
+    methods:{
+      getlist(){//获取列表
+        var _this = this;
+        api.getmyconsult({}).then(function (res) {
+          if(res.code === '000'){
+            _this.consList = JSON.parse(res.data);
+          }else if(res.code === '10007'){
+            var routername = _this.$route.name;
+            location.href='#/login/'+encodeURIComponent(routername)
+          }
+        })
+      }
     }
   }
 

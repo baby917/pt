@@ -11,8 +11,7 @@ Vue.use(ToastPlugin);
 Vue.use(WechatPlugin);
 
 router.beforeEach(function (to, from, next) {//每次路由变化开始
-
-
+  store.state.prefrom = from.name;//记录上个路由  判断是否第一次进来
   next();
 });
 
