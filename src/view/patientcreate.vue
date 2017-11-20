@@ -52,7 +52,7 @@
           sex: [['男', '女']],
           sexDefault:[],
           relationDefault:[],
-          birthday:new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDay(),
+          birthday:new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate(),
           relation:[['自己','父亲','母亲','配偶 ','儿子','女儿','兄弟','姐妹','亲戚','朋友','其他']],
         }
       },

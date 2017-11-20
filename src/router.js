@@ -120,7 +120,7 @@ export default new Router({
       }
     },
     {
-      path:'/chat',
+      path:'/chat/:servicedetailid',
       component:function (resolve) {
         require(['./view/chat.vue'],resolve)
       },

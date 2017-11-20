@@ -19,12 +19,12 @@
       <div class="consult-list" v-for="n in consList">
         <a href="javascript:void(0)" class="consult-item">
           <div class="icon-pic">
-            <img src="../assets/icon_yizhu@2x.png" alt="">
+            <img :src="BASEIMGURL + n.doctorphoto" alt="" :onerror="defaultImg">
           </div>
           <div class="consult-info">
             <div class="title">
-              <span class="left">官方医助</span>
-              <span class="date">17/10/09</span>
+              <span class="left">{{n.doctorname}}</span>
+              <span class="date">{{n.date}}</span>
             </div>
             <div class="clear"></div>
             <p class="msg">哈哈哈哈，呵呵呵呵呵呵呵呵呵呵。</p><a class="tuwen">图文咨询</a>
@@ -39,7 +39,9 @@
   export default {
     data(){
       return{
-        consList:[]
+        consList:[],
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        BASEIMGURL:api.BASEIMGURL,
       }
     },
     created(){

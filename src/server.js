@@ -163,6 +163,12 @@ export default {
         data : data
       })
     },
+    historyconsult(data){//获取历史咨询
+      return fetch({
+        url: BASEURL + '/v1/llyweb/service/advisorylist',
+        data : data
+      })
+    },
     getpatients(data){//患者列表
         return fetch({
           url: BASEURL + '/v1/llyweb/patient/pmypatients',
@@ -187,7 +193,18 @@ export default {
         data:data
       })
     },
-
+    getmsg(data) { //拉取消息
+      return fetch({
+        url: BASEURL + '/v1/llyweb/msg/getMsg',
+        data:data
+      })
+    },
+    sendmsg(data) { //发送消息
+      return fetch({
+        url: BASEURL + '/v1/llyweb/msg/sendMsg',
+        data:data
+      })
+    }
 
 
 

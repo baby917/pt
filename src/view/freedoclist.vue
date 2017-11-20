@@ -1,5 +1,6 @@
 <template>
   <div id="freedoclist">
+
     <div class="header">
       <!--<div class="left">-->
         <!--<span class="active">医院</span>&emsp;<img src="../assets/icon_zixun_yiyuan@2x.png" alt="down">-->
@@ -47,6 +48,7 @@
 </template>
 <script>
   import api from '../server';
+  import Loading from '../components/Loading.vue';
   export  default {
     data(){
       return{
@@ -60,6 +62,9 @@
         activenum:'3',
         deptid:'',
       }
+    },
+    components:{
+      Loading
     },
     mounted(){
       api.getfreedoclist({

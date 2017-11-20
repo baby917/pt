@@ -72,6 +72,9 @@
             code:this.code
           };
           api.login(data).then(function (res) {
+            if(res.code == '000'){
+              var userInfo=JSON.parse(res.data);
+            }
             console.log(res);
           })
         }

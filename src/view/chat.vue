@@ -3,17 +3,19 @@
     <div class="chat-text-box">
       <p class="tips">请描述病情，等待医生回复。<br>客服电话<a href="tel:4001816106">400-181-6106</a></p>
       <div class="text-area-list">
-        <div class="text-area-item" :class="{left:one.user=='doc',right:one.user=='me'}" v-for="(one,index) in chatList">
-          <p class="time">{{one.date}}</p>
+        <div class="text-area-item" :class="{left:one.pusherName == msg.doctorName,right:one.pusherName !== msg.doctorName}" v-for="(one,index) in chatList">
+          <p class="time">{{one.createDate}}</p>
           <div class="inner">
-            <img :src="one.url" alt="" class="avatar">
+            <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg">
             <div class="box">
-              <p class="doc-name"  v-show="(one.user=='doc')">{{one.name}}</p>
-              <div class="content" v-if="one.type==='text'">
-                {{one.value}}
+              <p class="doc-name"  v-show="(one.pusherName == msg.doctorName)">{{one.pusherName}}</p>
+              <!--文字-->
+              <div class="content" v-if="one.secondType==='4001'">
+                {{one.content}}
               </div>
-              <div class="content" v-if="one.type==='image'">
-                <img :src="one.value"  style="width: 1rem;" alt="error">
+              <!--图片-->
+              <div class="content" v-if="one.secondType==='4003'">
+                <img :src="one.content"  style="width: 1rem;" alt="error">
               </div>
               <!--<div class="content" v-if="one.type==='record'" :style="'width:'+one.w+'rem'">-->
                 <!--<span class="duration">{{one.duration}}</span>-->
@@ -72,23 +74,68 @@
   export default {
     data(){
       return {
-        chatList:[
-          {user:'doc',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'123',type:'text'},
-          {user:'doc',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'src/assets/portrait@2x.png',type:'image'},
-          {user:'me',date:'2017-12-12',url:'src/assets/portrait@2x.png',value:'src/assets/portrait@2x.png',type:'metext'}
-        ],
-        inputText:''
+        chatList:[],
+        inputText:'',
+        servicedetailid:this.$route.params.servicedetailid,
+        msg:{},
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        BASEIMGURL:api.BASEIMGURL,
       }
     },
     methods:{
       sendmessage(){
         var _this = this;
         var item = {
-          user:'me',date:'2017-11-17',url:'src/assets/portrait@2x.png',value:this.inputText,type:'text'
+          createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
+          url:'src/assets/portrait@2x.png',
+          content:this.inputText,
+          secondType:'4001'
         };
-        this.chatList.push(item)
+        this.chatList.push(item);
+        var obj={
+          'oi':_this.servicedetailid,
+          'msgType':'4001',
+          'content':_this.inputText
+        };
+        api.sendmsg(obj).then(res =>{
+          if(res.code == '000'){
+
+          }
+        })
+      },
+      msgApi(){
+        var _this = this;
+        api.getmsg({'oi':_this.servicedetailid}).then(res =>{
+          if(res.code == '000'){
+            _this.msg = JSON.parse(res.data);
+          console.log(this.msg)
+            var chatData = _this.msg.list;
+//         按时间排序
+            chatData.sort(function (a,b) {
+              return a.createDate - b.createDate
+            });
+            chatData.forEach(function (data) {
+              var time=data.createDate;
+              data.createDate=new Date(time).getFullYear()+'-'+(new Date(time).getMonth()+1)+'-'+new Date(time).getDate();
+            })
+            _this.chatList=chatData;
+          console.log(_this.chatList)
+          }
+        })
       }
+    },
+    mounted(){
+      const _this =this;
+      _this.msgApi();
+//      var getMsg = setInterval(function () {
+//        _this.msgApi();
+//      },5000);
+    },
+    beforeDestroy(){
+//      clearInterval(getMsg)
+
     }
+
   }
 </script>
 <style lang="less">

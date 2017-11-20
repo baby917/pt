@@ -1,83 +1,20 @@
 <template>
   <div id="historyconsult">
+    <Loading v-if="loadShow"></Loading>
     <div class="consult-box" >
       <div class="consult-list">
-        <a class="consult-item" href="">
+        <a class="consult-item" :href="'#/chat/' + n.servicedetailid" v-for="n in consultList">
           <div class="doc-img">
-            <img src="../assets/icon_photo@2x.png">
+            <img :src="BASEIMGURL + n.doctorphoto" :onerror="defaultImg">
           </div>
           <div class="consult-info">
             <p>
-              <span class="doc-name">李金贵</span>
-              <span class="tag-one">泌尿外科</span>
+              <span class="doc-name">{{n.doctorname}}</span>
+              <span class="tag-one">{{n.dept}}</span>
               <span class="already">已完成</span>
             </p>
             <p>
-              2017/10/09&emsp;10:10
-              <i>免费义诊</i>
-            </p>
-          </div>
-        </a>
-        <a class="consult-item" href="">
-          <div class="doc-img">
-            <img src="../assets/icon_photo@2x.png">
-          </div>
-          <div class="consult-info">
-            <p>
-              <span class="doc-name">李金贵</span>
-              <span class="tag-one">泌尿外科</span>
-              <span class="already">已完成</span>
-            </p>
-            <p>
-              2017/10/09&emsp;10:10
-              <i>免费义诊</i>
-            </p>
-          </div>
-        </a>
-        <a class="consult-item" href="">
-          <div class="doc-img">
-            <img src="../assets/icon_photo@2x.png">
-          </div>
-          <div class="consult-info">
-            <p>
-              <span class="doc-name">李金贵</span>
-              <span class="tag-one">泌尿外科</span>
-              <span class="already">已完成</span>
-            </p>
-            <p>
-              2017/10/09&emsp;10:10
-              <i>免费义诊</i>
-            </p>
-          </div>
-        </a>
-        <a class="consult-item" href="">
-          <div class="doc-img">
-            <img src="../assets/icon_photo@2x.png">
-          </div>
-          <div class="consult-info">
-            <p>
-              <span class="doc-name">李金贵</span>
-              <span class="tag-one">泌尿外科</span>
-              <span class="already">已完成</span>
-            </p>
-            <p>
-              2017/10/09&emsp;10:10
-              <i>免费义诊</i>
-            </p>
-          </div>
-        </a>
-        <a class="consult-item" href="">
-          <div class="doc-img">
-            <img src="../assets/icon_photo@2x.png">
-          </div>
-          <div class="consult-info">
-            <p>
-              <span class="doc-name">李金贵</span>
-              <span class="tag-one">泌尿外科</span>
-              <span class="already">已完成</span>
-            </p>
-            <p>
-              2017/10/09&emsp;10:10
+              {{n.date}}
               <i>免费义诊</i>
             </p>
           </div>
@@ -87,7 +24,36 @@
   </div>
 </template>
 <script>
-
+    import  api from '../server';
+    import Loading from '../components/Loading.vue';
+    export default {
+      components:{
+        Loading
+      },
+      data(){
+        return{
+          loadShow:true,
+          consultList:[],
+          defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+          BASEIMGURL:api.BASEIMGURL,
+        }
+      },
+      mounted(){
+        var _this = this;
+        api.historyconsult({'startpageno':'0'}).then(res =>{
+          this.loadShow = false;
+          if(res.code == '000'){
+            var listData = JSON.parse(res.data);
+            listData.forEach(function (item) { //筛选免费咨询列表
+              if(item.catalogcode =='freeservice'){
+                _this.consultList.push(item)
+              }
+            })
+            console.log(_this.consultList)
+          }
+        })
+      }
+    }
 </script>
 <style lang="less">
   #historyconsult{

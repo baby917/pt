@@ -125,6 +125,7 @@
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         services:[],
         patients:[],
+        orderDetail:{},
         checknum:'0',
         tuwenShow:false,
         tuwenBtnShow:true,
@@ -147,7 +148,6 @@
             }
           })
           this.services = openService;
-          console.log(this.services)
         }
       })
     },
@@ -198,7 +198,11 @@
           "doctorServiceId":this.services[0].rid
         };
         api.ordercreate(obj).then(res=>{
-          console.log(res)
+          if(res.code == '000'){
+            this.orderDetail=JSON.parse(res.data);
+            console.log(this.orderDetail.servicedetailid.toString())
+            location.href='#/chat/'+this.orderDetail.servicedetailid
+          }
         })
       }
 
