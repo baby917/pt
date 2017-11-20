@@ -200,10 +200,15 @@
         api.ordercreate(obj).then(res=>{
           if(res.code == '000'){
             this.orderDetail=JSON.parse(res.data);
-            console.log(this.orderDetail.servicedetailid.toString())
             location.href='#/chat/'+this.orderDetail.servicedetailid
+            api.paycallback({'orderNo':this.orderDetail.orderno}).then(res =>{
+              if(res.code == '000'){
+
+              }
+            })
           }
-        })
+        });
+
       }
 
       }
