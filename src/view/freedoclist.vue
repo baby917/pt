@@ -49,6 +49,8 @@
 <script>
   import api from '../server';
   import Loading from '../components/Loading.vue';
+  import {mapState} from 'vuex'
+  import navigate from '../utils/navigate'
   export  default {
     data(){
       return{
@@ -65,6 +67,39 @@
     },
     components:{
       Loading
+    },
+    computed:{
+      ...mapState({
+        token:state=>state.token
+      })
+    },
+    watch:{
+      token(){
+        if(this.$store.state.phone && this.$store.state.token){
+          this.getdoclist(this.deptid);
+        }else {
+          var routername = this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
+    created(){
+      var _this = this;
+      if(this.$store.state.prefrom){//如果不是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getdoclist(this.deptid);
+        }else {//不是第一次进来如果没有登录跳去登录
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }else {//如果是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getdoclist(this.deptid);
+        }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
     },
     mounted(){
      this.getdoclist(this.deptid);

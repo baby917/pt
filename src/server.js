@@ -237,6 +237,12 @@ export default {
           cb(json,textStatus);
         }
       })
+    },
+    getorderlist(data){//获取订单列表
+      return fetch({
+        url:BASEURL + 'v1/llyweb/doctor/porderlist',
+        data:data
+      })
     }
 
 

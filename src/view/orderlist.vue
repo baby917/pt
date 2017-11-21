@@ -1,31 +1,107 @@
 <template>
   <div id="orderList">
-    <div class="list">
+    <div class="list" v-for="n in orderlist" v-if="n.catalogcode=='freeservice'">
       <div class="list-top">
-        <span class="type">图文咨询</span><span class="user">廖丹阳</span><span class="status">已完成</span>
+        <span class="type">{{n.catalogname}}</span><span class="user">{{n.patientname}}</span>
+        <span class="status" v-if="n.orderstatus==0">未支付</span>
+        <span class="status" v-if="n.orderstatus==1">进行中</span>
+        <span class="status" v-if="n.orderstatus==4 || n.orderstatus == 6">已完成</span>
+        <span class="status" v-if="n.orderstatus==8">退款</span>
+        <span class="status" v-if="n.orderstatus==32">待支付</span>
+
       </div>
       <div class="doc-info">
         <img src="../assets/portrait@2x.png">
         <div class="info-text">
-          <p>姚强&emsp;<span>主任医师</span></p>
-          <p>四川大学华西第二医院&emsp;产科</p>
+          <p>{{n.doctorname}}&emsp;<span>{{n.title}}</span></p>
+          <p>{{n.hospital}}&emsp;{{n.dept}}</p>
         </div>
       </div>
       <div class="list-foot">
-        <span class="price">订单金额：<span>¥9.90</span></span>
-        <span class="buy-again">再次购买</span>
+        <span class="price">订单金额：<span>{{n.price}}</span></span>
+        <a class="buy-again" :href="'#/clinic/'+n.doctorid">再次购买</a>
       </div>
     </div>
-    <div class="list">
-
-    </div>
+    <div class="no-more" v-show="noMore">暂无更多数据</div>
   </div>
 </template>
 <script>
+  import api from '../server'
+  import {mapState} from 'vuex'
+  import navigate from '../utils/navigate'
   export default {
     data(){
       return{
-
+        orderlist:[],
+        startpageno:0,
+        isScroll:true,
+        noMore:false
+      }
+    },
+    computed:{
+      ...mapState({
+        token:state=>state.token
+      })
+    },
+    watch:{
+      token(){
+        if(this.$store.state.phone && this.$store.state.token){
+          this.getorderlist();
+        }else {
+          var routername = this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
+    created(){
+      var _this = this;
+      if(this.$store.state.prefrom){//如果不是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getorderlist();
+        }else {//不是第一次进来如果没有登录跳去登录
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }else {//如果是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getorderlist();
+        }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
+    mounted(){
+      const _this = this;
+      $(window).scroll(function () {
+        if(_this.isScroll){
+          var scrollTop = $(this).scrollTop();    //滚动条距离顶部的高度
+          var scrollHeight = $(document).height();   //当前页面的总高度
+          var clientHeight = $(this).height();    //当前可视的页面高度
+          if(scrollTop + clientHeight >= scrollHeight){   //距离顶部+当前高度 >=文档总高度 即代表滑动到底部 count++;
+            _this.startpageno++;
+            _this.getorderlist();
+          }
+        }
+      })
+    },
+    methods:{
+      getorderlist(){
+        var _this = this;
+        this.isScroll = false;
+        api.getorderlist({startpageno:this.startpageno}).then(function (res) {
+          if(res.code === '000'){
+            _this.isScroll = true;
+            _this.orderlist = _this.orderlist.concat(JSON.parse(res.data));
+            if(JSON.parse(res.data)<10){
+              _this.isScroll = false;
+              _this.noMore = true;
+            }
+          }else if(res.code === '10007'){
+            var routername = _this.$route.name;
+            location.href='#/login/'+encodeURIComponent(routername)
+          }
+        })
       }
     }
   }
@@ -67,6 +143,9 @@
           border-radius: 2px;font-size: .13rem;color: #00a560;text-align: center;line-height: .28rem;
         }
       }
+    }
+    .no-more{
+      width: 100%;text-align: center;font-size: .14rem;color: #333;padding: .1rem 0;
     }
   }
 </style>

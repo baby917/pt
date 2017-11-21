@@ -3,7 +3,7 @@
     <Loading v-if="loadShow"></Loading>
     <div class="consult-box" >
       <div class="consult-list">
-        <a class="consult-item" :href="'#/chat/' + n.servicedetailid" v-for="n in consultList">
+        <a class="consult-item" :href="'#/chat/' + n.servicedetailid+'/2'" v-for="n in consultList">
           <div class="doc-img">
             <img :src="BASEIMGURL + n.doctorphoto" :onerror="defaultImg">
           </div>
