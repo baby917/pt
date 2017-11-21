@@ -56,8 +56,8 @@
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup()" v-if="tuwenBtnShow">图文咨询（免费）</a>
-    <a class="btn" v-if="!tuwenBtnShow" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
+    <a class="btn" @click="tuwenPopup()" v-if="checknum == '0'">图文咨询（免费）</a>
+    <a class="btn" v-if="checknum == '1'" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="showPop">
       <div class="patient-box">
         <div class="patient-box-content">
@@ -127,10 +127,7 @@
         patients:[],
         orderDetail:{},
         checknum:'0',
-        tuwenShow:false,
-        tuwenBtnShow:true,
-        showConfirm:false,
-        show:false
+        showConfirm:true,
       }
     },
     mounted(){
@@ -184,23 +181,16 @@
       },
       checkService(num){
         this.checknum = num;
-        if(num == '0'){
-          this.tuwenShow = true;
-          this.tuwenBtnShow = true;
-        }else {
-          this.tuwenShow =false;
-          this.tuwenBtnShow = false;
-        }
       },
       enterTalk(id){
         var obj={
-          "rid":id,
+          "patientid":id,
           "doctorServiceId":this.services[0].rid
         };
         api.ordercreate(obj).then(res=>{
           if(res.code == '000'){
             this.orderDetail=JSON.parse(res.data);
-            location.href='#/chat/'+this.orderDetail.servicedetailid
+            location.href='#/chat/' + this.orderDetail.servicedetailid +'/'+ '1';
             api.paycallback({'orderNo':this.orderDetail.orderno}).then(res =>{
               if(res.code == '000'){
 
