@@ -125,7 +125,7 @@
             white-space: nowrap;
           }
           .msg{
-            float: left;
+            float: left;width: calc(~'100% - .8rem');word-wrap: normal;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
           }
           .tuwen{
             float: right;

@@ -6,7 +6,8 @@
         <div class="text-area-item" :class="{left:one.pusherName == msg.doctorName,right:one.pusherName !== msg.doctorName}" v-for="(one,index) in chatList">
           <p class="time">{{one.createDate}}</p>
           <div class="inner">
-            <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg">
+            <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherName==msg.doctorName">
+            <img :src="myhead" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherName!=msg.doctorName">
             <div class="box">
               <p class="doc-name"  v-show="(one.pusherName == msg.doctorName)">{{one.pusherName}}</p>
               <!--文字-->
@@ -76,6 +77,7 @@
   export default {
     data(){
       return {
+        myhead:'',
         chatList:[],
         inputText:'',
         servicedetailid:this.$route.params.servicedetailid,
@@ -83,7 +85,8 @@
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         BASEIMGURL:api.BASEIMGURL,
         send:false,
-        cansend:true
+        cansend:true,
+        setint:''
       }
     },
     created(){
@@ -184,6 +187,12 @@
         var _this = this;
         api.getmsg({'oi':_this.servicedetailid}).then(res =>{
           if(res.code == '000'){
+            if(JSON.parse(res.data).status>3){//会诊结束
+              _this.$vux.alert.show({
+                content:'您的会话已结束！'
+              });
+              _this.cansend = false;
+            }
             _this.msg = JSON.parse(res.data);
             var chatData = _this.msg.list;
             console.log(JSON.parse(res.data));
@@ -196,6 +205,12 @@
               data.createDate=new Date(time).getFullYear()+'-'+(new Date(time).getMonth()+1)+'-'+new Date(time).getDate();
             });
             _this.chatList=chatData;
+            api.getuserinfo({}).then(function (res) {
+              if(res.code === '000'){
+                var data = JSON.parse(res.data);
+                _this.myhead = data.userHead
+              }
+            })
           }
         })
       }
@@ -209,14 +224,16 @@
           }
         },400);
       });
-      _this.msgApi();
-//      var getMsg = setInterval(function () {
-//        _this.msgApi();
-//      },5000);
-    },
-    beforeDestroy(){
-//      clearInterval(getMsg)
 
+      if(this.$store.state.phone && this.$store.state.token){
+        _this.msgApi();
+        _this.setint = setInterval(function () {
+          _this.msgApi();
+        },50000)
+      }
+    },
+    beforeDestroy(){//路由销毁
+      clearInterval(this.setint)
     }
 
   }

@@ -13,7 +13,7 @@
         <img src="../assets/icon_zixun_keshi@2x.png" alt="down">
       </div>
     </div>
-    <div class="doc-box" v-if="showdoclist" >
+    <div class="doc-box">
       <div class="doc-list">
         <a class="doc-item" :href="'#/clinic/' + doc.rid" v-for="doc in doclist">
           <div class="doc-img">
@@ -34,6 +34,10 @@
             </div>
           </div>
         </a>
+    </div>
+    <div class="no-dept" v-show="!showdoclist">
+      <img src="../assets/nonepatient.png">
+      <p>该科室暂无医生哦</p>
     </div>
     </div>
     <div class="content dept-list-box" v-if="showdeptlist">
@@ -101,9 +105,6 @@
         }
       }
     },
-    mounted(){
-     this.getdoclist(this.deptid);
-    },
     methods:{
       filterdept(){
         this.showdoclist=!this.showdoclist;
@@ -112,8 +113,6 @@
           if(res.code == '000'){
             this.deptlist=JSON.parse(res.data);
             this.deptchildrenlist=this.deptlist[0].children;
-            console.log(this.deptlist)
-
           }
         })
       },
@@ -123,15 +122,20 @@
       },
       getdoclist(id){
         var _this = this;
-        api.getfreedoclist({
+        api.getfreedoclist({//获取医生列表
           "deptid":id,
           "freetype":"1",// 义诊类型  2.会员义诊 1.免费义诊
           "startpageno":"0",// 分页 页码
           "num":'0',//分页大小
         }).then(res=>{
           if(res.code == '000'){
-            _this.doclist=JSON.parse(res.data);
-            console.log(JSON.parse(res.data));
+            var data = JSON.parse(res.data);
+            if(data.length>0){
+              _this.doclist=JSON.parse(res.data);
+            }else {
+              _this.doclist = [];
+              _this.showdoclist = false;
+            }
           }else if(res.code === '10007'){
             var routername = _this.$route.name;
             location.href = '#/login/'+encodeURIComponent(routername)
@@ -167,7 +171,10 @@
     .doc-item .doc-info i{font-size: 0.12rem;height: 0.16rem;border: 1px solid #6bd1a1;color: #6bd1a1;display: inline-block;text-align: center;line-height: 0.16rem;border-radius: 0.02rem;margin-right: 0.05rem;padding: 0 .03rem;}
     .doc-item .doc-info .freebtn{position: absolute;bottom: .05rem;right: .1rem;}
     .doc-item .doc-info .freebtn img{width: .54rem;height: .18rem;border-radius: 0}
-    .content{background: #fff;font-size: .16rem;height: 100%;width: 100%;max-width: 750px;opacity: 1;visibility:visible;transition: all .2s ease;}
+
+    //科室筛选
+    .content{position:fixed;background: #fff;font-size: .16rem;height: calc(~'100% - .45rem');overflow:hidden;
+      width: 100%;max-width: 750px;opacity: 1;visibility:visible;transition: all .2s ease;left: 0;top:.45rem;}
     .content>div{float: left; height: 100%; overflow-x: hidden; overflow-y: auto;}
     .left-box{width: 40%}
     .left-box a{display:block;height: .4rem;text-align: center;color: #666666;width: 100%;border-right: 1px solid rgba(1,1,1,.1);
@@ -175,5 +182,10 @@
     .left-box a.active{background: #fff;border-right-color: transparent;}
     .right-box{width: 56%;position: absolute;right: 0}
     .right-box a{display: block;width: 100%;height: .4rem;line-height: .4rem;color: #666666;border-bottom: 1px solid rgba(1,1,1,.1)}
+    .no-dept{
+      width: 100%;overflow: hidden;text-align: center;
+      img{width: 1.92rem;height: 1.92rem;margin-top: .5rem;margin-bottom: .3rem}
+      p{font-size: .16rem;color: #333;}
+    }
   }
 </style>
