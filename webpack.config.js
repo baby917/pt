@@ -5,11 +5,14 @@ var vuxLoader = require('vux-loader');
 
 
 let webpackConfig = {
-  entry: './src/main.js',
+  entry: {
+    'build':'./src/main.js',
+    'vendor':'./src/static/hsh-jsapi-1.0.0.js'
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js?[hash]'
+    publicPath: '/',
+    filename: '[name].js?[hash]'
   },
   module: {
     rules: [

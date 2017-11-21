@@ -2,22 +2,22 @@
   <div id="myconsult">
     <div class="consult-box">
       <div class="consult-list">
-        <a href="javascript:void(0)" class="consult-item">
+        <a href="#/historyconsult" class="consult-item">
           <div class="icon-pic">
             <img src="../assets/icon_lizhizixun.png" alt="">
           </div>
           <div class="consult-info">
             <div class="title">
               <span class="left">历史咨询</span>
-              <span class="date">17/10/09</span>
+              <!--<span class="date">17/10/09</span>-->
             </div>
             <div class="clear"></div>
-            <p class="content">咨询结束，您与马振医生的图问咨询已超过48小时您与马振医生的图问咨询已超过48小时您与马振医生的图问咨询已超过48小时您与马振医生的图问咨询已超过48小时</p>
+            <p class="content">点击查看历史咨询</p>
           </div>
         </a>
       </div>
       <div class="consult-list" v-for="n in consList"  v-if="n.catalogcode=='freeservice'">
-        <a :href="'#/chat/'+n.servicedetailid" class="consult-item">
+        <a :href="'#/chat/'+n.servicedetailid+'/1'" class="consult-item">
           <div class="icon-pic">
             <img :src="BASEIMGURL + n.doctorphoto" alt="" :onerror="defaultImg">
           </div>
@@ -27,7 +27,7 @@
               <span class="date">{{n.date}}</span>
             </div>
             <div class="clear"></div>
-            <p class="msg">哈哈哈哈，呵呵呵呵呵呵呵呵呵呵。</p><a class="tuwen">图文咨询</a>
+            <p class="msg">{{n.msg}}</p><a class="tuwen">图文咨询</a>
           </div>
         </a>
       </div>

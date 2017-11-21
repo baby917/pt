@@ -18,11 +18,11 @@
               <div class="content" v-if="one.secondType==='4003'">
                 <img :src="one.content"  style="width: 1rem;" alt="error">
               </div>
-              <!--<div class="content" v-if="one.type==='record'" :style="'width:'+one.w+'rem'">-->
-                <!--<span class="duration">{{one.duration}}</span>-->
-                <!--<button @click="playMp3($event)"></button>-->
-                <!--<audio :src="one.value"></audio>-->
-              <!--</div>-->
+              <div class="content" v-if="one.secondType==='4002'" :style="'width:'+one.duration/10+'rem'">
+                <span class="duration">{{one.duration}}</span>
+                <button @click="playMp3($event)"></button>
+                <audio :src="one.content"></audio>
+              </div>
               <!--<div class="content" v-if="one.type==='merecord'" :style="'width:'+one.w+'rem'">-->
                 <!--<img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">-->
                 <!--<span class="duration" v-show="!one.load">{{one.duration}}</span>-->
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="blank-block"></div>
-    <div class="input-box">
+    <div class="input-box" v-if="cansend">
       <!--<div class="record">-->
         <!--<img src="../assets/voice.png" v-show="textType=='text'" @click="textType='voice';inputText=''">-->
         <!--<img src="../assets/keybord.png" v-show="textType=='voice'" @click="textType='text'">-->
@@ -58,9 +58,9 @@
       <input type="text"  v-model="inputText" >
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
-        <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
-        <input type="file" id="upLoad" style="display: none" @change="upchange($event)">
-        <div @click="sendmessage" v-show="send">发送</div>
+          <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
+          <input type="file" id="upLoad" style="display: none" @change="upchange($event)">
+          <div @click="sendmessage" v-show="send">发送</div>
       </div>
       <!--<div class="no-click" v-show="canClick"></div>-->
     </div>
@@ -82,7 +82,13 @@
         msg:{},
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         BASEIMGURL:api.BASEIMGURL,
-        send:false
+        send:false,
+        cansend:true
+      }
+    },
+    created(){
+      if(this.$route.params.status == 2){//如果是历史隐藏掉聊天框
+        this.cansend = false;
       }
     },
     watch:{
@@ -165,12 +171,22 @@
           }
         })
       },
+      playMp3(e){//播放语音
+        var _this = $(e.currentTarget);
+        var audio = $(e.currentTarget).next()[0];
+        audio.play();
+        _this.addClass('change');
+        audio.onended = function () {
+          _this.removeClass('change')
+        };
+      },
       msgApi(){
         var _this = this;
         api.getmsg({'oi':_this.servicedetailid}).then(res =>{
           if(res.code == '000'){
             _this.msg = JSON.parse(res.data);
             var chatData = _this.msg.list;
+            console.log(JSON.parse(res.data));
 //         按时间排序
             chatData.sort(function (a,b) {
               return a.createDate - b.createDate
