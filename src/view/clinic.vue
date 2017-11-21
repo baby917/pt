@@ -184,13 +184,13 @@
       },
       enterTalk(id){
         var obj={
-          "rid":id,
+          "patientid":id,
           "doctorServiceId":this.services[0].rid
         };
         api.ordercreate(obj).then(res=>{
           if(res.code == '000'){
             this.orderDetail=JSON.parse(res.data);
-            location.href='#/chat/'+this.orderDetail.servicedetailid
+            location.href='#/chat/' + this.orderDetail.servicedetailid +'/'+ '1';
             api.paycallback({'orderNo':this.orderDetail.orderno}).then(res =>{
               if(res.code == '000'){
 
