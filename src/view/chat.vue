@@ -11,6 +11,7 @@
               <p class="doc-name"  v-show="(one.pusherName == msg.doctorName)">{{one.pusherName}}</p>
               <!--文字-->
               <div class="content" v-if="one.secondType==='4001'">
+                <img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">
                 {{one.content}}
               </div>
               <!--图片-->
@@ -27,10 +28,10 @@
                 <!--<span class="duration" v-show="!one.load">{{one.duration}}</span>-->
                 <!--<button @click="myaudio(one.value,$event,one.load)"></button>-->
               <!--</div>-->
-              <div class="content" v-if="one.type==='metext'">
-                <!--<img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">-->
-                {{one.value}}
-              </div>
+              <!--<div class="content" v-if="one.type==='metext'">-->
+                <!--<img src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">-->
+                <!--{{one.value}}-->
+              <!--</div>-->
               <!--<div class="content" v-if="one.type==='card'">-->
                 <!--<div class="card-box" @click="clinic(one.value.r)">-->
                   <!--<p class="card-title">名片</p>-->
@@ -57,8 +58,9 @@
       <input type="text"  v-model="inputText" >
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
-        <x-icon type="ios-plus-outline" class="plus"></x-icon>
-        <div @click="sendmessage">发送</div>
+        <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
+        <input type="file" id="upLoad" style="display: none" @change="upchange($event)">
+        <div @click="sendmessage" v-show="send">发送</div>
       </div>
       <!--<div class="no-click" v-show="canClick"></div>-->
     </div>
@@ -80,26 +82,86 @@
         msg:{},
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         BASEIMGURL:api.BASEIMGURL,
+        send:false
+      }
+    },
+    watch:{
+      chatList(){
+        this.$nextTick(function () {
+          setTimeout(function () {
+            if($('.text-area-item').last().length){
+              $('.text-area-item').last().get(0).scrollIntoView();
+            }
+          },400);
+        })
+      },
+      inputText(){
+        if(this.inputText.length>0){
+          this.send=true
+        }else {
+          this.send = false;
+        }
       }
     },
     methods:{
-      sendmessage(){
+      sendmessage(e){
         var _this = this;
+        $(e.currentTarget).blur();
+        if(!this.inputText.trim()){
+          this.$vux.toast.text('发送信息不能为空','top');
+          return false
+        }
         var item = {
           createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
           url:'src/assets/portrait@2x.png',
           content:this.inputText,
-          secondType:'4001'
+          secondType:'4001',
+          load:true
         };
         this.chatList.push(item);
         var obj={
           'oi':_this.servicedetailid,
-          'msgType':'4001',
+          'msgType':'txt',
           'content':_this.inputText
         };
+        _this.inputText = '';
         api.sendmsg(obj).then(res =>{
           if(res.code == '000'){
-
+            _this.chatList[_this.chatList.length-1].load = false
+          }
+        })
+      },
+      uploadimg(){//模拟input file点击
+        $('#upLoad').click();
+      },
+      upchange(e){//file改变事件
+        var _this = this;
+        var abc = new FormData();
+        abc.append("content", e.target.files[0]);
+        abc.append('METHOD','uploadimage');
+        abc.append('RECDATA',JSON.stringify({code:'chat'}));
+        var item = {
+          createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
+          url:'src/assets/portrait@2x.png',
+          content:'src/assets/loading.gif',
+          secondType:'4003',
+        };
+        _this.chatList.push(item);
+        api.uploadimg(abc,function (res) {
+          if(res.code === '000'){
+            var data = JSON.parse(res.data);
+            var url = data.urls[0];
+            var paname = data.pname[0];
+            var obj={
+              'oi':_this.servicedetailid,
+              'msgType':'img',
+              'content':paname
+            };
+            api.sendmsg(obj).then(function (res) {
+              if(res.code === '000'){
+                _this.chatList[_this.chatList.length-1].content = url;
+              }
+            })
           }
         })
       },
@@ -108,7 +170,6 @@
         api.getmsg({'oi':_this.servicedetailid}).then(res =>{
           if(res.code == '000'){
             _this.msg = JSON.parse(res.data);
-          console.log(this.msg)
             var chatData = _this.msg.list;
 //         按时间排序
             chatData.sort(function (a,b) {
@@ -117,15 +178,21 @@
             chatData.forEach(function (data) {
               var time=data.createDate;
               data.createDate=new Date(time).getFullYear()+'-'+(new Date(time).getMonth()+1)+'-'+new Date(time).getDate();
-            })
+            });
             _this.chatList=chatData;
-          console.log(_this.chatList)
           }
         })
       }
     },
     mounted(){
-      const _this =this;
+      const _this = this;
+      this.$nextTick(function () {
+        setTimeout(function () {
+          if($('.text-area-item').last().length){
+            $('.text-area-item').last().get(0).scrollIntoView();
+          }
+        },400);
+      });
       _this.msgApi();
 //      var getMsg = setInterval(function () {
 //        _this.msgApi();

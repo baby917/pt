@@ -38,10 +38,10 @@
     </div>
     <div class="content dept-list-box" v-if="showdeptlist">
       <div class="left-box">
-        <a href="javascript:;" :class="{'active':activenum == n.rid}" v-for="n in deptlist" @click="seclectdept(n)" >{{n.name}}</a>
+        <a :class="{'active':activenum == n.rid}" v-for="n in deptlist" @click="seclectdept(n)" >{{n.name}}</a>
       </div>
       <div class="right-box">
-        <a href="javascirpt:" v-for="n in deptchildrenlist" @click="getdoclist(n.rid)">{{n.name}}</a>
+        <a  v-for="n in deptchildrenlist" @click="getdoclist(n.rid)">{{n.name}}</a>
       </div>
     </div>
   </div>
@@ -67,18 +67,7 @@
       Loading
     },
     mounted(){
-      api.getfreedoclist({
-        "deptid":this.deptid,
-        "freetype":"1",// 义诊类型  2.会员义诊 1.免费义诊
-        "code":1,// 关键字 - 义诊搜索时传
-        "startpageno":"0",// 分页 页码
-        "num":'0',//分页大小
-      }).then(res=>{
-        if(res.code == '000'){
-          this.doclist=JSON.parse(res.data);
-
-        }
-      })
+     this.getdoclist(this.deptid);
     },
     methods:{
       filterdept(){
@@ -96,23 +85,26 @@
       seclectdept(item){
         this.activenum = item.rid;
         this.deptchildrenlist = item.children;
-        console.log(this.deptchildrenlist)
       },
       getdoclist(id){
+        var _this = this;
         api.getfreedoclist({
           "deptid":id,
           "freetype":"1",// 义诊类型  2.会员义诊 1.免费义诊
-          "code":1,// 关键字 - 义诊搜索时传
           "startpageno":"0",// 分页 页码
           "num":'0',//分页大小
         }).then(res=>{
           if(res.code == '000'){
-            this.doclist=JSON.parse(res.data);
-            console.log(this.doclist)
+            _this.doclist=JSON.parse(res.data);
+            console.log(JSON.parse(res.data));
+          }else if(res.code === '10007'){
+            var routername = _this.$route.name;
+            location.href = '#/login/'+encodeURIComponent(routername)
           }
         });
-        this.showdoclist=!this.showdoclist;
-        this.showdeptlist=!this.showdeptlist;
+       if(this.showdeptlist){
+         this.showdeptlist = false;
+       }
       }
     }
   }

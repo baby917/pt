@@ -16,7 +16,7 @@
           </div>
         </a>
       </div>
-      <div class="consult-list" v-for="n in consList">
+      <div class="consult-list" v-for="n in consList"  v-if="n.catalogcode=='freeservice'">
         <a :href="'#/chat/'+n.servicedetailid" class="consult-item">
           <div class="icon-pic">
             <img :src="BASEIMGURL + n.doctorphoto" alt="" :onerror="defaultImg">

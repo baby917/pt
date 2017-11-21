@@ -210,6 +210,33 @@ export default {
         url: BASEURL + '/v1/llyweb/msg/sendMsg',
         data:data
       })
+    },
+    getuserinfo(data){//获取用户信息
+      return fetch({
+        url: BASEURL + '/v1/llyweb/user/getMyUserInfo',
+        data:data
+      })
+    },
+    uploadimg(data,cb){//上传图片
+      $.ajax({
+        type:'POST',
+        data:data,
+        url:UPLOADIMGURL+ 'app/v2/image',
+        contentType: false,
+        processData: false,
+        complete: function (XMLHttpRequest, textStatus) {
+          var json = '';
+          try{
+            json = JSON.parse(XMLHttpRequest.responseText);
+          }catch(e){
+            json = {
+              code : '99999',
+              msg : '服务器错误'
+            }
+          }
+          cb(json,textStatus);
+        }
+      })
     }
 
 
