@@ -51,12 +51,12 @@
       </div>
     </div>
     <div class="blank-block"></div>
-    <div class="input-box" v-if="cansend">
+    <div class="input-box" v-if="cansend" id="inputBox">
       <!--<div class="record">-->
         <!--<img src="../assets/voice.png" v-show="textType=='text'" @click="textType='voice';inputText=''">-->
         <!--<img src="../assets/keybord.png" v-show="textType=='voice'" @click="textType='text'">-->
       <!--</div>-->
-      <input type="text"  v-model="inputText" >
+      <input type="text"  v-model="inputText" @focus="inputFocus">
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
@@ -113,6 +113,13 @@
       }
     },
     methods:{
+      inputFocus(){ //解决input框被键盘遮挡
+        let _this=this;
+        setTimeout(function () {
+          let pannel =_this.$refs.inputBox;
+          pannel.scrollIntoView(true);
+        },200);
+      },
       sendmessage(e){
         var _this = this;
         $(e.currentTarget).blur();
@@ -195,7 +202,6 @@
             }
             _this.msg = JSON.parse(res.data);
             var chatData = _this.msg.list;
-            console.log(JSON.parse(res.data));
 //         按时间排序
             chatData.sort(function (a,b) {
               return a.createDate - b.createDate
