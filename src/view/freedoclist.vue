@@ -25,7 +25,7 @@
               <span class="tag-one">{{doc.title}}</span>
             </p>
             <p>{{doc.hospital}}  {{doc.dept}}</p>
-            <p class="good-at">{{doc.goodat}}</p>
+            <p class="good-at">擅长：{{doc.goodat}}</p>
             <p>
               <i v-if="doc.doctortag">{{doc.doctortag}}</i> <i v-if="doc.averagetag">{{doc.averagetag}}</i>
             </p>
@@ -158,7 +158,7 @@
     .header img{width: .14rem; vertical-align: middle; margin-left: .05rem; opacity: 0.6;}
     .left{border-right: 1px solid #E9E9E9;}
     .doc-box{height: auto;position: relative;padding-left: .1rem;}
-    .doc-list .doc-item{padding-left: 0.12rem;height: 1.09rem;display: flex;padding-top: 0.12rem;box-sizing: border-box;}
+    .doc-list .doc-item{padding-left: 0.12rem;display: flex;padding-top: 0.12rem;box-sizing: border-box;}
     .doc-list .doc-item .doc-img{width: 0.55rem;position: relative;margin-right: 0.12rem;overflow: hidden;margin-top:.05rem;}
     .doc-list .doc-item img{width: 0.48rem;height: 0.48rem;border-radius: 50%}
     .doc-list .doc-img span{position: absolute;top:0.45rem;background:#6bd1a1;color:#fff;font-size: 0.12rem; border-radius: 40%;z-index: 99;padding: 0.01rem 0.02rem;left: 0.13rem;}
@@ -167,10 +167,10 @@
     .doc-item .doc-info p:last-child{margin-top: 0.05rem;}
     .doc-item .doc-info .doc-name{color:#333;font-size: 0.14rem;margin-right: 0.05rem;}
     .doc-item .tag-one{font-size: 12px;color: #999999;border-radius: 0.02rem;padding:0.01rem 0.02rem;margin:0 0.05rem;}
-    .doc-item .doc-info .good-at{color:#999;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;height: 0.2rem;width: 2.8rem;margin-bottom: .04rem;}
+    .doc-item .doc-info .good-at{color:#999;overflow: hidden;max-height: 0.4rem;width: 2.8rem;margin-bottom: .06rem;}
     .doc-item .doc-info i{font-size: 0.12rem;height: 0.16rem;border: 1px solid #6bd1a1;color: #6bd1a1;display: inline-block;text-align: center;line-height: 0.16rem;border-radius: 0.02rem;margin-right: 0.05rem;padding: 0 .03rem;}
-    .doc-item .doc-info .freebtn{position: absolute;bottom: .05rem;right: .1rem;}
-    .doc-item .doc-info .freebtn img{width: .54rem;height: .18rem;border-radius: 0}
+    .doc-item .doc-info .freebtn{position: relative;width: 100%;text-align: right;}
+    .doc-item .doc-info .freebtn img{width: .54rem;height: .18rem;border-radius: 0;margin-right: .12rem}
 
     //科室筛选
     .content{position:fixed;background: #fff;font-size: .16rem;height: calc(~'100% - .45rem');overflow:hidden;

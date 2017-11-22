@@ -138,7 +138,18 @@ export default new Router({
       meta:{
         title:'关注公众号'
       }
-    }
+    },
+    {
+      path:'/mydoctor',
+      component:function (resolve) {
+        require(['./view/mydoctor.vue'],resolve)
+      },
+      name:'mydoctor',
+      meta:{
+        title:'我的医生'
+      }
+    },
+
 
 
   ]

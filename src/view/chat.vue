@@ -192,6 +192,7 @@
                 content:'您的会话已结束！'
               });
               _this.cansend = false;
+              clearInterval(this.setint)
             }
             _this.msg = JSON.parse(res.data);
             var chatData = _this.msg.list;

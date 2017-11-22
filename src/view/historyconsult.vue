@@ -1,6 +1,6 @@
 <template>
   <div id="historyconsult">
-    <Loading v-if="loadShow"></Loading>
+    <!--<Loading v-if="loadShow"></Loading>-->
     <div class="consult-box" >
       <div class="consult-list">
         <a class="consult-item" :href="'#/chat/' + n.servicedetailid+'/2'" v-for="n in consultList">
@@ -32,7 +32,7 @@
       },
       data(){
         return{
-          loadShow:true,
+//          loadShow:true,
           consultList:[],
           defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
           BASEIMGURL:api.BASEIMGURL,
@@ -41,7 +41,7 @@
       mounted(){
         var _this = this;
         api.historyconsult({'startpageno':'0'}).then(res =>{
-          this.loadShow = false;
+//          this.loadShow = false;
           if(res.code == '000'){
             var listData = JSON.parse(res.data);
             listData.forEach(function (item) { //筛选免费咨询列表

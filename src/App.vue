@@ -152,7 +152,7 @@
 <style lang="less">
   html{font-size:100px}
   html,body,#app{height: 100%;background: #fff;font-family:'Microsoft YaHei','宋体',sans-serif;}
-  #app{width: 100%;max-width: 750px;margin: 0 auto;opacity: 0}
+  #app{width: 100%;max-width: 750px;margin: 0 auto;opacity: 0;}
   #app.show{opacity: 1}
   *{margin: 0;padding: 0}
   i{font-style:normal}
@@ -185,4 +185,28 @@
   /*.weui-dialog__btn_primary{color: #00a560 !important;height: .52rem!important;}*/
   /*.weui-dialog__ft:after{border: none!important;}*/
   /*.weui-dialog__btn:after{border-left: none!important;}*/
+
+  .weui-toast{font-size: 0;background-color: transparent;}
+  .weui-toast .weui-loading{animation:move .5s steps(6) infinite;animation-timing-function : step-start;background: transparent url("./assets/loading_icon_logo@2x.png") no-repeat;background-size: cover;width: .42rem;height: .42rem}
+
+  @keyframes move {
+    0%{
+      background-position : 0;
+    }
+    16.66%{
+      background-position : -.42rem;
+    }
+    33.33%{
+      background-position : -.84rem;
+    }
+    50%{
+      background-position : -1.26rem;
+    }
+    66.66%{
+      background-position : -1.68rem;
+    }
+    83.33%{
+      background-position : -2.1rem;
+    }
+  }
 </style>

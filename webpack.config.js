@@ -72,7 +72,7 @@ let webpackConfig = {
     noInfo: true,
     overlay: true,
     host : '0.0.0.0',
-    port:'8081'
+    port:'80'
   },
   performance: {
     hints: false

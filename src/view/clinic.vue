@@ -134,6 +134,7 @@
       api.doctorclinic({doctorid:this.doctorId}).then(res=>{
         if(res.code == '000'){
           this.doctorInfo = JSON.parse(res.data);
+          console.log(JSON.parse(res.data));
           this.comment = this.doctorInfo.comment;
           let openService=[];
           this.doctorInfo.services.forEach(function (val) {

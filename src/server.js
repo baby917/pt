@@ -6,6 +6,8 @@ import qs from 'qs'
 import $ from 'jquery'
 import useragent from './utils/navigate'
 import store from './store/store'
+import Vue from 'vue'
+
 //预发模式
 const MODEL = 'dev';
 
@@ -76,6 +78,7 @@ const errorAlert = function (errorStr) {
 };
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) =>{
+    Vue.$vux.loading.hide();
     if(res.data && res.data.code!== '000'
         && res.request.responseURL.indexOf('v1/llyweb/user/getopenid') < 0
         && res.request.responseURL.indexOf('wxUser/bindingPhone') < 0
@@ -92,6 +95,7 @@ axios.interceptors.response.use((res) =>{
 //返回一个Promise(发送post请求)
 export function fetch(modal) {
     return new Promise((resolve, reject) => {
+        Vue.$vux.loading.show();
         const obj = {
             method: 'post'
         };
@@ -241,6 +245,12 @@ export default {
     getorderlist(data){//获取订单列表
       return fetch({
         url:BASEURL + 'v1/llyweb/doctor/porderlist',
+        data:data
+      })
+    },
+    getmydoclist(data){
+      return fetch({
+        url: BASEURL + 'v1/llyweb/user/attentiondocteamlist',
         data:data
       })
     }
