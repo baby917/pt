@@ -13,7 +13,7 @@
         <img src="../assets/icon_zixun_keshi@2x.png" alt="down">
       </div>
     </div>
-    <div class="doc-box">
+    <div class="doc-box" v-if="!showdeptlist">
       <div class="doc-list">
         <a class="doc-item" :href="'#/clinic/' + doc.rid" v-for="doc in doclist">
           <div class="doc-img">
@@ -30,7 +30,8 @@
               <i v-if="doc.doctortag">{{doc.doctortag}}</i> <i v-if="doc.averagetag">{{doc.averagetag}}</i>
             </p>
             <div class="freebtn">
-              <img src="../assets/tag_mianfeizixun.png" alt="">
+              <img src="../assets/tag_mianfeizixun.png" alt="" v-if="doc.remaintime !== '抢光了'">
+              <img src="../assets/jinri@2x.png" alt="" class="none" v-if="doc.remaintime == '抢光了'">
             </div>
           </div>
         </a>
@@ -132,6 +133,7 @@
             var data = JSON.parse(res.data);
             if(data.length>0){
               _this.doclist=JSON.parse(res.data);
+              console.log(_this.doclist)
             }else {
               _this.doclist = [];
               _this.showdoclist = false;
@@ -171,6 +173,7 @@
     .doc-item .doc-info i{font-size: 0.12rem;height: 0.16rem;border: 1px solid #6bd1a1;color: #6bd1a1;display: inline-block;text-align: center;line-height: 0.16rem;border-radius: 0.02rem;margin-right: 0.05rem;padding: 0 .03rem;}
     .doc-item .doc-info .freebtn{position: relative;width: 100%;text-align: right;}
     .doc-item .doc-info .freebtn img{width: .54rem;height: .18rem;border-radius: 0;margin-right: .12rem}
+    .doc-item .doc-info .freebtn img.none{width: 1rem;}
 
     //科室筛选
     .content{position:fixed;background: #fff;font-size: .16rem;height: calc(~'100% - .45rem');overflow:hidden;
