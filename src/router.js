@@ -149,6 +149,24 @@ export default new Router({
         title:'我的医生'
       }
     },
+    {
+      path: '/archives/:planid',
+      component: function (resolve) {
+        require(['./view/archives.vue'],resolve)
+      },
+      meta: {
+        title: '随访档案'
+      }
+    },
+    {//随访提交成功状态
+      path:'/archivesstatus/:url',
+      component:function (resolve) {
+        require(['./view/archives_status.vue'],resolve)
+      },
+      mata:{
+        title:'提交成功'
+      }
+    },
 
 
 
