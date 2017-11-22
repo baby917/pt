@@ -87,6 +87,7 @@ axios.interceptors.response.use((res) =>{
     }
     return res;
 }, (error) => {
+    Vue.$vux.loading.hide();
     errorAlert('网络错误，请检查网络设置');
     return Promise.reject(error);
 });
@@ -253,8 +254,58 @@ export default {
         url: BASEURL + 'v1/llyweb/user/attentiondocteamlist',
         data:data
       })
-    }
-
+    },
+    checkFu(openId){ //查询用户是否开启随访服务
+      return fetch({
+        url: BASEURL + '/v1/fu/isOpenFu',
+        data:{
+          openId:openId
+        }
+      })
+    },
+    commitTemplateBaseInfo(modal,cb){
+      $.ajax({
+        type:'post',
+        url: FUBASEURL + '/app/v2/wfollowup',
+        data : {
+          METHOD:'wplansetrow',
+          PHONE:'10000000000',
+          SIGN:Date.now(),
+          TOKEN:"70b0877082184a1584347abd5a5f93af1499766674417",
+          RECDATA:JSON.stringify(modal),
+          REQTIME:Date.now(),
+          CTYPE:"pc",
+          USERTYPE:"2",
+          VERSION:"2.0"
+        },
+        complete: function (XMLHttpRequest) {
+          let json = '';
+          try{
+            json = JSON.parse(XMLHttpRequest.responseText);
+          }catch(e){
+            json = {
+              code : '99999',
+              msg : '服务器错误'
+            }
+          }
+          cb(json);
+        }
+      })
+    },
+    bindingPhone(modal){  //绑定手机号
+      return fetch({
+        url : BASEURL + '/wx/lly/pt/user/bindingPhone',
+        data : modal
+      })
+    },
+    getUserInfo(openId){ //获取个人信息
+      return fetch({
+        url : BASEURL + '/v1/fu/getUserInfo',
+        data : {
+          openId : openId
+        }
+      })
+    },
 
 
 

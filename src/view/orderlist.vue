@@ -40,11 +40,11 @@
     },
     computed:{
       ...mapState({
-        token:state=>state.token
+        openid:state=>state.openid
       })
     },
     watch:{
-      token(){
+      openid(){
         if(this.$store.state.phone && this.$store.state.token){
           this.getorderlist();
         }else {

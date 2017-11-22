@@ -186,7 +186,8 @@
   /*.weui-dialog__ft:after{border: none!important;}*/
   /*.weui-dialog__btn:after{border-left: none!important;}*/
 
-  .weui-toast{font-size: 0;background-color: transparent;}
+  .weui-toast{font-size: 0}
+  .weui-toast .weui-toast__content{overflow: hidden}
   .weui-toast .weui-loading{animation:move .5s steps(6) infinite;animation-timing-function : step-start;background: transparent url("./assets/loading_icon_logo@2x.png") no-repeat;background-size: cover;width: .42rem;height: .42rem}
 
   @keyframes move {

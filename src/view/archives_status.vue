@@ -3,7 +3,7 @@
         <img src="../assets/icon_login_successed@2x.png" class="banner">
         <p class="status">加入成功</p>
         <p class="tips">您已完善资料，并成功加入随访计划</p>
-        <button class="enter" @click="enter">进入随访计划</button>
+        <!--<button class="enter" @click="enter">进入随访计划</button>-->
     </div>
 </template>
 <script>

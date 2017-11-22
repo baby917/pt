@@ -7,7 +7,7 @@
             <div class="phone-title">
                 手机验证
             </div>
-            <div class="phone-list">
+          <div class="phone-list">
                 <img src="../assets/phone@2x.png"><input type="number" placeholder="请输入手机号" v-model="userInfo.phone" :readonly="isPhone" oninput="if(value.length>11)value=value.slice(0,11)">
             </div>
             <div class="phone-list">
@@ -35,9 +35,9 @@
             <li>
                 <datetime title="出生年月" v-model="patientbirthdate" :min-year=1900 :max-year='maxyear' cancel-text="取消" confirm-text="确认" placeholder="请选择" :class="{placeholder:!patientbirthdate}"></datetime>
             </li>
-            <li>
-                <selector title="手术方式" :options="templateList" v-model="userInfo.template" placeholder="请选择"></selector>
-            </li>
+            <!--<li>-->
+                <!--<selector title="手术方式" :options="templateList" v-model="userInfo.template" placeholder="请选择"></selector>-->
+            <!--</li>-->
             <li>
                 <datetime  title="手术日期" v-model="userInfo.starttime" :min-year=1900 :max-year=2100 cancel-text="取消" confirm-text="确认" placeholder="请选择" :class="{placeholder:!userInfo.starttime}"></datetime>
             </li>
@@ -58,7 +58,6 @@ export default {
         Cell,
         Selector,
         Datetime
-
     },
     data () {
         return {
@@ -85,14 +84,14 @@ export default {
     },
     computed:{
         canCommit(){
-            return this.userInfo.patientname && this.userInfo.patientgender && this.patientbirthdate && this.userInfo.template && this.userInfo.starttime
+            return this.userInfo.patientname && this.userInfo.patientgender && this.patientbirthdate && this.userInfo.starttime
         },
         'phoneInputVer'(){
             return isMobilePhone(this.userInfo.phone.toString(),'zh-CN')
         },
         ...mapState({
-            userId:state => state.userId,
-            openId:state => state.openId
+//            userId:state => state.userId,
+            openId:state => state.openid
         }),
         'maxyear'(){
             return (new Date()).getFullYear();
@@ -117,18 +116,18 @@ export default {
         }else if(api.MODEL === 'dist'){
             this.suid="574816725b3f48cd9dfc30df";
         }
-        api.wtemplatelist(this.suid,function (res) {//获取手术方式
-            if(res.code === '000'){
-                const data = JSON.parse(res.data);
-                data.map(function (item) {
-                    _this.templateList.push({
-                        key : item.id,
-                        value : item.name
-                    })
-                });
-            }
-        });
-        if(this.$store.state.openId){
+//        api.wtemplatelist(this.suid,function (res) {//获取手术方式
+//            if(res.code === '000'){
+//                const data = JSON.parse(res.data);
+//                data.map(function (item) {
+//                    _this.templateList.push({
+//                        key : item.id,
+//                        value : item.name
+//                    })
+//                });
+//            }
+//        });
+        if(this.$store.state.openid){
            this.getInfo()
         }
     },
@@ -140,17 +139,18 @@ export default {
     methods:{
         getInfo(){//需要openId的方法
             const _this = this;
-            api.checkFu(this.$store.state.openId).then(function (res) { //查询是否开启随访服务
+            api.checkFu(this.$store.state.openid).then(function (res) { //查询是否开启随访服务
                 if(res.code === '000'){
                     if(res.data && res.data.url){
-                        location.replace(res.data.url)
+//                        location.replace(res.data.url)
+                      _this.$router.replace('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data.url)));
                     }else {
                         _this.isShow = true;
                         _this.userInfo.planid =res.data && res.data.planid || '';
                     }
                 }
             });
-            api.getUserInfo(this.$store.state.openId).then(function (res) {//获取个人信息
+            api.getUserInfo(this.$store.state.openid).then(function (res) {//获取个人信息
                 if(res.code === '000'){
 //                    _this.userInfo.patientname = res.data.username;
                     if(res.data.cellPhone){
@@ -184,7 +184,7 @@ export default {
                 if(this.isPhone){//如果有电话直接执行随访
                     api.commitTemplateBaseInfo(this.userInfo,function (res) {
                         if(res.code === '000'){
-                            _this.wxSend();
+//                            _this.wxSend();
                             _this.$router.replace('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data).url));
                         }else {
                            _this.$vux.toast.text(res.msg,'top')
@@ -192,13 +192,12 @@ export default {
                     })
                 }else {//没有绑定电话
                     var modal = {
-                        phone : _this.userInfo.phone,
+                        cellPhone : _this.userInfo.phone,
                         code : _this.code,
-                        openId : this.$store.state.openId
+                        openId : this.$store.state.openid
                     };
-                    api.bindingPhone(modal).then(function (res) {
+                    api.login(modal).then(function (res) {
                         if(res.code === '000'){
-                            _this.$store.state.userId = res.data.userId;
                             api.commitTemplateBaseInfo(_this.userInfo,function (res) {
                                 if(res.code === '000'){
 //                                    _this.wxSend();
@@ -216,7 +215,7 @@ export default {
                 if(!this.userInfo.patientname) this.$vux.toast.text('请输入真实姓名', 'top');
                 else if(!this.userInfo.patientgender) this.$vux.toast.text('请选择性别', 'top');
                 else if(!this.patientbirthdate) this.$vux.toast.text('请选择出生年月', 'top');
-                else if(!this.userInfo.template) this.$vux.toast.text('请选择手术方式', 'top');
+//                else if(!this.userInfo.template) this.$vux.toast.text('请选择手术方式', 'top');
                 else if(!this.userInfo.starttime) this.$vux.toast.text('请选择手术日期', 'top');
             }
         },
@@ -237,18 +236,18 @@ export default {
                     _this.codeVal--
                 }
             },1000);
-            api.sendCode(this.userInfo.phone).then(function (res) {
+            api.sendcode({phone:this.userInfo.phone}).then(function (res) {
                 if(res.code === '000'){
                     _this.$vux.toast.text('发送验证码成功')
                 }
             })
         },
-        wxSend(){//微信发送消息
-            const _this = this;
-            api.wxSendImg(this.$store.state.openId).then(function (res) {
-
-            })
-        }
+//        wxSend(){//微信发送消息
+//            const _this = this;
+//            api.wxSendImg(this.$store.state.openId).then(function (res) {
+//
+//            })
+//        }
 
     }
 }
@@ -256,10 +255,10 @@ export default {
 
 <style lang="less">
 #archives{
-    min-height: 100%;
+    /*min-height: 100%;*/
     font-size: 12px;
     background-color: #f2f2f2;
-    padding-bottom: .5rem;
+    /*padding-bottom: .5rem;*/
     .tips{
         font-size: 12px;
         height: .3rem;
@@ -308,7 +307,7 @@ export default {
 
     .fr{float: right}
     ul{font-size: 0;background-color: #fff;}
-    ul li{font-size:.14rem;margin-left:.12rem;width:calc(~'100% - .24rem');padding-right:.12rem;height: 0.48rem;line-height: 0.48rem;overflow: hidden;border-bottom: 1px solid #e9e9e9}
+    ul li{font-size:.14rem;margin-left:.12rem;width:calc(~'100% - .24rem');padding-right:.12rem;height: 0.48rem;line-height: 0.48rem;border-bottom: 1px solid #e9e9e9;list-style: none;}
     .weui-cell{padding:0 !important;margin:0 !important;color:#666!important;}
     span.title,.weui-label{color:#666;width: 1.2rem;}
     .weui-cell__ft{color: #333}
@@ -328,4 +327,5 @@ export default {
     .vux-popup-dialog{font-size: 0.14rem !important;}
     .sure{position:fixed;width: 100%;height: 0.44rem;line-height: 0.44rem;font-size:0.18rem;color:#fff;background: #dfdfdf;display: block;text-align: center;bottom: 0;}
     .sure.active{background: linear-gradient(to left, #5dd0f8, #01A7E1);border: none;outline: none;}
+
 </style>
