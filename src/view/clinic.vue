@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="consult-type" v-if="services.length > 0">
-        <div :class="['type-item',{'active':checknum == n}]" v-for="(item,n) in services" @click="checkService(n)">
+        <div :class="['type-item',{'active':checknum == n}]" v-for="(item,n) in services" @click="checkService(n,item)">
           <img src="../assets/wzs_icon_tuwen_Default@2x.png" alt="" class="appointment" v-if="item.code =='freeservice'">
           <img src="../assets/wzs_icon_phone_Default@2x.png" alt="" class="outpatient" v-if="item.code == 'reservationCall'">
           <i v-if="checknum == '0' && item.code =='freeservice'"><img src="../assets/wzs_icon_tuwen_yz@2x.png" alt=""></i>
@@ -34,10 +34,10 @@
           <p :class="{'tuwenprize':item.code == 'freeservice'}">{{item.price}}{{item.desc}}</p>
         </div>
       </div>
-      <div class="consult-text" v-if="checknum == '0'">
+      <div class="consult-text" v-if="tuwenShow && services.length >0">
         <img src="../assets/tuwendisabled.png" alt="" > 通过图片、文字、语音咨询
       </div>
-      <div class="consult-text" v-if="checknum == '1'">
+      <div class="consult-text" v-if="!tuwenShow && services.length >0">
         <img src="../assets/wzs_icon_phone_small@2x.png" alt="" > 与专家充分沟通
       </div>
       <div class="divide"></div>
@@ -56,8 +56,8 @@
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup()" v-if="checknum == '0'">图文咨询（免费）</a>
-    <a class="btn" v-if="checknum == '1'" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
+    <a class="btn" @click="tuwenPopup()" v-if="tuwenShow && services.length >0">图文咨询（免费）</a>
+    <a class="btn" v-if="!tuwenShow && services.length >0" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="showPop">
       <div class="patient-box">
         <div class="patient-box-content">
@@ -128,9 +128,11 @@
         orderDetail:{},
         checknum:'0',
         showConfirm:true,
+        tuwenShow:false
       }
     },
     mounted(){
+      var _this =this;
       api.doctorclinic({doctorid:this.doctorId}).then(res=>{
         if(res.code == '000'){
           this.doctorInfo = JSON.parse(res.data);
@@ -143,6 +145,7 @@
             }
             if(val.code == 'freeservice'){
               openService.push(val);
+              _this.tuwenShow=true;
             }
           })
           this.services = openService;
@@ -180,8 +183,13 @@
         this.showPop = true;
         this.getPatients();
       },
-      checkService(num){
+      checkService(num,item){
         this.checknum = num;
+        if(item.code == 'freeservice'){
+          this.tuwenShow=true;
+        }else {
+          this.tuwenShow=false;
+        }
       },
       enterTalk(id){
         var obj={
