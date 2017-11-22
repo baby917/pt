@@ -115,10 +115,11 @@
     methods:{
       inputFocus(){ //解决input框被键盘遮挡
         let _this=this;
-        setTimeout(function () {
-          let pannel =_this.$refs.inputBox;
-          pannel.scrollIntoView(true);
-        },200);
+//        setTimeout(function () {
+////          let pannel = document.getElementById('inputBox');
+//          let pannel =_this.$refs.inputBox;
+//          pannel.scrollIntoView(true);
+//        },200);
       },
       sendmessage(e){
         var _this = this;

@@ -73,6 +73,7 @@
     },
     mounted(){
       const _this = this;
+//      _this.orderlist=[];
       $(window).scroll(function () {
         if(_this.isScroll){
           var scrollTop = $(this).scrollTop();    //滚动条距离顶部的高度
