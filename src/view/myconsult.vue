@@ -72,7 +72,7 @@
         }
       }else {//如果是第一次进来
         if(this.$store.state.phone && this.$store.state.token){
-          _this.getlist();
+            _this.getlist();
         }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
           var routername = _this.$route.name;
           location.href = '#/login/'+encodeURIComponent(routername)

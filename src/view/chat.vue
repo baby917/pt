@@ -72,8 +72,8 @@
 </template>
 <script>
   import api from '../server'
-//  import {dateFormat} from 'vux'
-//  import { mapState } from 'vuex'
+  import {dateFormat} from 'vux'
+  import { mapState } from 'vuex'
   export default {
     data(){
       return {
@@ -94,7 +94,21 @@
         this.cansend = false;
       }
     },
+    computed:{
+      ...mapState({
+        token:state=>state.token
+      }),
+    },
     watch:{
+      token(){
+        var _this = this;
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.msgApi();
+          _this.setint = setInterval(function () {
+            _this.msgApi();
+          },50000)
+        }
+      },
       chatList(){
         this.$nextTick(function () {
           setTimeout(function () {
@@ -218,6 +232,9 @@
                 _this.myhead = data.userHead
               }
             })
+          }else if(res.code === '10007'){
+            var routername = this.$route.name;
+            location.href = '#/login/'+encodeURIComponent(routername)
           }
         })
       }
