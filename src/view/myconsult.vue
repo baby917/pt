@@ -107,7 +107,7 @@
         .icon-pic{
           margin-right: .12rem;
           img{
-            width: .48rem;height: .48rem;
+            width: .48rem;height: .48rem;border-radius: 100px;
           }
         }
         .consult-info{

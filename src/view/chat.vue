@@ -7,7 +7,7 @@
           <p class="time">{{one.createDate}}</p>
           <div class="inner">
             <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherId==msg.doctorUserId.toString()">
-            <img :src="myhead" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherId!=msg.doctorUserId.toString()">
+            <img :src="myhead" alt="" class="avatar" :onerror="defaultmyImg" v-if="one.pusherId!=msg.doctorUserId.toString()">
             <div class="box">
               <p class="doc-name"  v-show="(one.pusherId == msg.doctorUserId.toString())">{{one.pusherName}}</p>
               <!--文字-->
@@ -64,7 +64,7 @@
         <!--<img src="../assets/voice.png" v-show="textType=='text'" @click="textType='voice';inputText=''">-->
         <!--<img src="../assets/keybord.png" v-show="textType=='voice'" @click="textType='text'">-->
       <!--</div>-->
-      <input type="text"  v-model="inputText"   id="inputBox" maxlength="1000">
+      <input type="text"  v-model="inputText" @focus="inputFocu" maxlength="1000">
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
@@ -91,6 +91,7 @@
         servicedetailid:this.$route.params.servicedetailid,
         msg:{},
         defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
+        defaultmyImg:'this.src="' + require('../assets/portrait@2x.png') + '"',
         BASEIMGURL:api.BASEIMGURL,
         send:false,
         cansend:true,
@@ -135,23 +136,9 @@
         }else {
           this.send = false;
         }
-      }
+      },
     },
     methods:{
-//      inputFocus(){ //解决input框被键盘遮挡
-//        let _this=this;
-//        var set=setInterval(function () {
-////          var pannel = document.getElementById('inputBox');
-//          var pannel =_this.$refs.inputBox;
-//          pannel.scrollIntoView(false);
-//          pannel.scrollIntoViewIfNeeded();
-//        },200);
-//      },
-//      inputBlur(){
-//        clearInterval(set);
-//      },
-//      var timerId = null;
-
       sendmessage(e){
         var _this = this;
         $(e.currentTarget).blur();
@@ -268,6 +255,14 @@
             return false;
           }
         })
+      },
+      inputFocu(){
+        console.log($('.text-area-item').last().get(0))
+        setTimeout(function () {
+          if($('.text-area-item').last().length){
+            $('.text-area-item').last().get(0).scrollIntoView();
+          }
+        },400);
       }
     },
     mounted(){
