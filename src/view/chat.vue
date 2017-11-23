@@ -241,8 +241,9 @@
               }
             })
           }else if(res.code === '10007'){
-            var routername = this.$route.name;
-            location.href = '#/login/'+encodeURIComponent(routername)
+            var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
+            location.href = '#/login/'+encodeURIComponent(routername);
+            return false;
           }
         })
       }

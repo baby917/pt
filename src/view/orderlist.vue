@@ -11,7 +11,7 @@
 
       </div>
       <div class="doc-info">
-        <img src="../assets/portrait@2x.png">
+        <img :src="IMGURL+n.photo" :onerror="defaultImg">
         <div class="info-text">
           <p>{{n.doctorname}}&emsp;<span>{{n.title}}</span></p>
           <p>{{n.hospital}}&emsp;{{n.dept}}</p>
@@ -32,6 +32,8 @@
   export default {
     data(){
       return{
+        IMGURL:api.BASEIMGURL,
+        defaultImg: 'this.src="' + require('../assets/icon_yizhu@2x.png') + '"',//默认图片
         orderlist:[],
         startpageno:0,
         isScroll:true,
