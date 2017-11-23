@@ -60,7 +60,7 @@
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
-          <input type="file" id="upLoad" style="display: none" @change="upchange($event)">
+          <input type="file" id="upLoad" style="display: none" accept="image/*" @change="upchange($event)">
           <div @click="sendmessage" v-show="send">发送</div>
       </div>
       <!--<div class="no-click" v-show="canClick"></div>-->
@@ -249,6 +249,16 @@
     },
     mounted(){
       const _this = this;
+      //解决fixed键盘问题
+      var h=$(window).height();
+      $(window).resize(function() {
+        if($(window).height()<h){
+//          alert(123);
+        }
+        if($(window).height()>=h){
+//          alert(444);
+        }
+      });
       this.$nextTick(function () {
         setTimeout(function () {
           if($('.text-area-item').last().length){
