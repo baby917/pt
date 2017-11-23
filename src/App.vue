@@ -45,6 +45,12 @@
       }
 
       if(bower == 'wechat'){//微信时的登录
+        if(_this.$store.state.openid){
+          setTimeout(function () {
+            _this.appShow = true;
+          },0);
+          return false;
+        }
         if(!paramObj.code){
           const href = encodeURIComponent(location.origin + '/' + location.hash);
           let appid = '';

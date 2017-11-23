@@ -18,7 +18,6 @@ router.beforeEach(function (to, from, next) {//每次路由变化开始
 });
 
 router.afterEach(function (to, from) {//每次路由变化结束
-
   document.title = to.meta.title || '';//设置title
 });
 

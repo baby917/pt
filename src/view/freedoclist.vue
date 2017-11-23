@@ -99,7 +99,7 @@
         }
       }else {//如果是第一次进来
         if(this.$store.state.phone && this.$store.state.token){
-          _this.getdoclist(this.deptid);
+            _this.getdoclist(this.deptid);
         }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
           var routername = _this.$route.name;
           location.href = '#/login/'+encodeURIComponent(routername)
@@ -133,7 +133,7 @@
             var data = JSON.parse(res.data);
             if(data.length>0){
               _this.doclist=JSON.parse(res.data);
-              console.log(_this.doclist)
+              _this.showdoclist = true;
             }else {
               _this.doclist = [];
               _this.showdoclist = false;

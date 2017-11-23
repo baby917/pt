@@ -39,6 +39,7 @@
 <script>
 import api from '../server'
 import { mapState } from 'vuex'
+import navigate from '../utils/navigate'
 export default{
     data(){
         return {
@@ -50,25 +51,47 @@ export default{
             moregroup:false,
         }
     },
-    created:function () {
-
-    },
     computed:{
-        openclose(){
-            if(this.moregroup){
-                return '收起'
-            }else {
-                return '加载更多'
-            }
+      ...mapState({
+        token:state=>state.token
+      }),
+      openclose(){
+        if(this.moregroup){
+          return '收起'
+        }else {
+          return '加载更多'
         }
-
+      }
     },
     watch:{
+      token(){
+        if(this.$store.state.phone && this.$store.state.token){
+          this.getattion();
+        }else {
+          var routername = this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
+    created:function () {
+      var _this = this;
+      if(this.$store.state.prefrom){//如果不是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.getattion();
+        }else {//不是第一次进来如果没有登录跳去登录
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }else {//如果是第一次进来
+        if(this.$store.state.phone && this.$store.state.token){
+            _this.getattion();
+        }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
+          var routername = _this.$route.name;
+          location.href = '#/login/'+encodeURIComponent(routername)
+        }
+      }
+    },
 
-    },
-    mounted(){
-       this.getattion();
-    },
     methods:{
         getattion(){
             const _this=this;
@@ -99,7 +122,7 @@ export default{
     h2{height: 0.4rem;line-height: 0.4rem;color:#999;font-size: 0.14rem;}
     li{padding: 0.1rem 0;width: 100%;overflow: hidden;position: relative;margin: 0;display: block}
     li:after{content: "";width: 100%;height: 1px;position: absolute;left: 0;top: 0;transform: scale(1,0.5);background: #e9e9e9;}
-    li .head-pic{width: 0.56rem;height: 0.56rem;border-radius: 50%;margin-right: 0.12rem;float: left}
+    li .head-pic{width: 0.48rem;height: 0.48rem;border-radius: 50%;margin-right: 0.12rem;float: left}
     li .right{float: left;width: calc(~'100% - 0.68rem')}
     li .doctor-group-name{color: #333;font-size: 0.16rem;padding-top: 0.1rem;}
     li .hosp-name{color:#666;font-size:0.12rem;margin-top: 0.03rem}

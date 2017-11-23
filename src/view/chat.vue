@@ -15,11 +15,19 @@
                 <img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">
                 {{one.content}}
               </div>
+              <div class="content" v-if="one.secondType==='4005'">
+                <img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">
+                <span>[视频，请到乐乐医APP上查看]</span>
+              </div>
               <!--图片-->
               <div class="content" v-if="one.secondType==='4003'">
-                <img :src="one.content"  style="width: 1rem;" alt="error">
+                <img :src="one.content" style="width: 1rem;" alt="error" @click="preview(one.content)">
+                <div class="preview-img" v-show="showpreimg" @click="hideview()">
+                  <img :src="preimg">
+                  <span></span>
+                </div>
               </div>
-              <div class="content" v-if="one.secondType==='4002'" :style="'width:'+one.duration/10+'rem'">
+              <div class="content" v-if="one.secondType==='4002'">
                 <span class="duration">{{one.duration}}</span>
                 <button @click="playMp3($event)"></button>
                 <audio :src="one.content"></audio>
@@ -33,18 +41,18 @@
                 <!--<img src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">-->
                 <!--{{one.value}}-->
               <!--</div>-->
-              <!--<div class="content" v-if="one.type==='card'">-->
-                <!--<div class="card-box" @click="clinic(one.value.r)">-->
-                  <!--<p class="card-title">名片</p>-->
-                  <!--<div class="card-info">-->
-                    <!--<img :src="one.value.url" alt="">-->
-                    <!--<div class="info">-->
-                      <!--<p><span>{{one.value.n}}</span> {{one.value.h}}</p>-->
-                      <!--<p>{{one.value.o1}} {{one.value.o2}}</p>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
+              <div class="content" v-if="one.secondType==='4007'">
+                <div class="card-box" @click="goclinic(JSON.parse(one.content).r)">
+                  <p class="card-title">名片</p>
+                  <div class="card-info">
+                    <img :src="BASEIMGURL+JSON.parse(one.content).u">
+                    <div class="info">
+                      <p><span>{{JSON.parse(one.content).n}}</span> {{JSON.parse(one.content).h}}</p>
+                      <p>{{JSON.parse(one.content).o1}} {{JSON.parse(one.content).o2}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -60,7 +68,7 @@
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
-          <input type="file" id="upLoad" style="display: none" @change="upchange($event)">
+          <input type="file" id="upLoad" style="display: none" accept="image/*" @change="upchange($event)">
           <div @click="sendmessage" v-show="send">发送</div>
       </div>
       <!--<div class="no-click" v-show="canClick"></div>-->
@@ -72,8 +80,8 @@
 </template>
 <script>
   import api from '../server'
-//  import {dateFormat} from 'vux'
-//  import { mapState } from 'vuex'
+  import {dateFormat} from 'vux'
+  import { mapState } from 'vuex'
   export default {
     data(){
       return {
@@ -88,6 +96,9 @@
         send:false,
         cansend:true,
         setint:'',
+        timerId : null,
+        preimg:'',
+        showpreimg:false
       }
     },
     created(){
@@ -95,7 +106,21 @@
         this.cansend = false;
       }
     },
+    computed:{
+      ...mapState({
+        token:state=>state.token
+      }),
+    },
     watch:{
+      token(){
+        var _this = this;
+        if(this.$store.state.phone && this.$store.state.token){
+          _this.msgApi();
+          _this.setint = setInterval(function () {
+            _this.msgApi();
+          },50000)
+        }
+      },
       chatList(){
         this.$nextTick(function () {
           setTimeout(function () {
@@ -123,7 +148,7 @@
         }
         var item = {
           createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
-          url:'src/assets/portrait@2x.png',
+          url:this.myhead,
           content:this.inputText,
           secondType:'4001',
           load:true
@@ -152,8 +177,8 @@
         abc.append('RECDATA',JSON.stringify({code:'chat'}));
         var item = {
           createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
-          url:'src/assets/portrait@2x.png',
-          content:'src/assets/loading.gif',
+          url:this.myhead,
+          content:require('../assets/loading.gif'),
           secondType:'4003',
         };
         _this.chatList.push(item);
@@ -184,6 +209,17 @@
           _this.removeClass('change')
         };
       },
+      preview(url){//预览图片
+        this.preimg = url;
+        this.showpreimg = true;
+      },
+      hideview(){//隐藏预览图片
+        this.preimg = '';
+        this.showpreimg = false;
+      },
+      goclinic(id){//名片跳去微诊所
+        location.href='#/clinic/'+id
+      },
       msgApi(){
         var _this = this;
         api.getmsg({'oi':_this.servicedetailid}).then(res =>{
@@ -196,6 +232,7 @@
               clearInterval(this.setint)
             }
             _this.msg = JSON.parse(res.data);
+            console.log(JSON.parse(res.data));
             var chatData = _this.msg.list;
 //         按时间排序
             chatData.sort(function (a,b) {
@@ -212,6 +249,10 @@
                 _this.myhead = data.userHead
               }
             })
+          }else if(res.code === '10007'){
+            var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
+            location.href = '#/login/'+encodeURIComponent(routername);
+            return false;
           }
         })
       },
@@ -226,6 +267,16 @@
     },
     mounted(){
       const _this = this;
+      //解决fixed键盘问题
+      var h=$(window).height();
+      $(window).resize(function() {
+        if($(window).height()<h){
+//          alert(123);
+        }
+        if($(window).height()>=h){
+//          alert(444);
+        }
+      });
       this.$nextTick(function () {
         setTimeout(function () {
           if($('.text-area-item').last().length){
@@ -355,5 +406,12 @@
       img{display:inline-block;width: 1rem;height: 1rem;position: absolute;margin-top: -.5rem;top: 50%;margin-left: -.5rem;left: 50%;}
     }
 
+
+    .preview-img{
+      position: fixed;width: 100%;height: 100%;left: 0;top: 0;background-color: rgba(1,1,1,.2);z-index: 1000;
+      text-align: center;vertical-align: middle;
+      img{vertical-align: middle;width: 80%;}
+      span{display: inline-block;height: 100%;vertical-align: middle}
+    }
   }
 </style>

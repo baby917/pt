@@ -50,7 +50,7 @@
       },
       next(){//下一步
         if(this.isphone){
-          this.$router.push('/register/'+this.phone+'/'+this.$route.params.routername)
+          this.$router.push('/register/'+this.phone+'/'+encodeURIComponent(this.$route.params.routername))
         }
       }
     }
