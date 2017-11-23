@@ -1,2 +1,2 @@
 webpackJsonp([15],{121:function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var l=t(285),r=t(1),u=r(null,l.a,!1,null,null,null);n.default=u.exports},285:function(e,n,t){"use strict";var l=function(){var e=this,n=e.$createElement;return(e._self._c||n)("div",[e._v("\n  hello world\n")])},r=[],u={render:l,staticRenderFns:r};n.a=u}});
-//# sourceMappingURL=15.js.map?05bc4e066552bbcddec2
+//# sourceMappingURL=15.js.map?c9bbce084be877043bd9

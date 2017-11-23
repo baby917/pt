@@ -103,6 +103,8 @@
         }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
           var routername = _this.$route.name;
           location.href = '#/login/'+encodeURIComponent(routername)
+        }else if(this.$store.state.openid && navigate()=='wechat'){
+          _this.getdoclist(this.deptid);
         }
       }
     },

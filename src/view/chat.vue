@@ -3,13 +3,13 @@
     <div class="chat-text-box">
       <p class="tips">请描述病情，等待医生回复。<br>客服电话<a href="tel:4001816106">400-181-6106</a></p>
       <div class="text-area-list">
-        <div class="text-area-item" :class="{left:one.pusherName == msg.doctorName,right:one.pusherName !== msg.doctorName}" v-for="(one,index) in chatList">
+        <div class="text-area-item" :class="{left:one.pusherId == msg.doctorUserId.toString(),right:one.pusherId !== msg.doctorUserId.toString()}" v-for="(one,index) in chatList">
           <p class="time">{{one.createDate}}</p>
           <div class="inner">
-            <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherName==msg.doctorName">
-            <img :src="myhead" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherName!=msg.doctorName">
+            <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherId==msg.doctorUserId.toString()">
+            <img :src="myhead" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherId!=msg.doctorUserId.toString()">
             <div class="box">
-              <p class="doc-name"  v-show="(one.pusherName == msg.doctorName)">{{one.pusherName}}</p>
+              <p class="doc-name"  v-show="(one.pusherId == msg.doctorUserId.toString())">{{one.pusherName}}</p>
               <!--文字-->
               <div class="content" v-if="one.secondType==='4001'">
                 <img v-show="one.load" src="../assets/loading.gif" style="position: absolute;width: .3rem;left: -.3rem;top: 0.04rem;">
@@ -64,7 +64,7 @@
         <!--<img src="../assets/voice.png" v-show="textType=='text'" @click="textType='voice';inputText=''">-->
         <!--<img src="../assets/keybord.png" v-show="textType=='voice'" @click="textType='text'">-->
       <!--</div>-->
-      <input type="text"  v-model="inputText"   id="inputBox">
+      <input type="text"  v-model="inputText"   id="inputBox" maxlength="1000">
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>

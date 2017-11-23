@@ -143,8 +143,9 @@ export default {
                 if(res.code === '000'){
                     if(res.data && !res.data.url && res.data.planid){
 //                        location.replace(res.data.url)
-                      _this.$router.replace('/archivesstatus/'+encodeURIComponent(res.data.url));
-                    }else if(res.data && res.data.planid && res.data.url){
+                      _this.$router.replace('/archivesstatus/'+1);
+                    }else
+                      if(res.data && res.data.planid && res.data.url){
                       location.replace(res.data.url)
                     }else {
                         _this.isShow = true;
@@ -187,7 +188,7 @@ export default {
                     api.commitTemplateBaseInfo(this.userInfo,function (res) {
                         if(res.code === '000'){
 //                            _this.wxSend();
-                            _this.$router.replace('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data).url));
+                            _this.$router.push('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data).url));
                         }else {
                            _this.$vux.toast.text(res.msg,'top')
                         }
@@ -203,7 +204,7 @@ export default {
                             api.commitTemplateBaseInfo(_this.userInfo,function (res) {
                                 if(res.code === '000'){
 //                                    _this.wxSend();
-                                    _this.$router.replace('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data).url));
+                                    _this.$router.push('/archivesstatus/'+encodeURIComponent(JSON.parse(res.data).url));
                                 }else {
                                     _this.$vux.toast.text(res.msg,'top')
                                 }
