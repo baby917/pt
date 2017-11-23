@@ -27,7 +27,7 @@
               <span class="date">{{n.date}}</span>
             </div>
             <div class="clear"></div>
-            <p class="msg">{{n.msg}}</p><a class="tuwen">图文咨询</a>
+            <p class="msg">{{n.msg}}</p><a class="tuwen">免费义诊</a>
           </div>
         </a>
       </div>
@@ -105,7 +105,7 @@
         .icon-pic{
           margin-right: .12rem;
           img{
-            width: .48rem;height: .48rem;
+            width: .48rem;height: .48rem;border-radius: 100px;
           }
         }
         .consult-info{
