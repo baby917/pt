@@ -56,7 +56,7 @@
         <!--<img src="../assets/voice.png" v-show="textType=='text'" @click="textType='voice';inputText=''">-->
         <!--<img src="../assets/keybord.png" v-show="textType=='voice'" @click="textType='text'">-->
       <!--</div>-->
-      <input type="text"  v-model="inputText" @focus="inputFocus" @blur="inputBlur"  id="inputBox">
+      <input type="text"  v-model="inputText"   id="inputBox">
       <!--<button v-show="textType=='voice'" @touchstart="beginVoice" @touchend="endVoice" id="voiceBtn">按住说话</button>-->
       <div class="upload-img" >
           <x-icon type="ios-plus-outline" class="plus" @click.native="uploadimg" v-show="!send"></x-icon>
