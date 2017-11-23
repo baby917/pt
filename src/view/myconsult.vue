@@ -27,7 +27,7 @@
               <span class="date">{{n.date}}</span>
             </div>
             <div class="clear"></div>
-            <p class="msg">{{n.msg}}</p><a class="tuwen">图文咨询</a>
+            <p class="msg">{{n.msg}}</p><a class="tuwen">免费义诊</a>
           </div>
         </a>
       </div>

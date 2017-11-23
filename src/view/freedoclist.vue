@@ -133,7 +133,7 @@
             var data = JSON.parse(res.data);
             if(data.length>0){
               _this.doclist=JSON.parse(res.data);
-              console.log(_this.doclist)
+              _this.showdoclist = true;
             }else {
               _this.doclist = [];
               _this.showdoclist = false;

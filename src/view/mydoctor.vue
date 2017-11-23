@@ -122,7 +122,7 @@ export default{
     h2{height: 0.4rem;line-height: 0.4rem;color:#999;font-size: 0.14rem;}
     li{padding: 0.1rem 0;width: 100%;overflow: hidden;position: relative;margin: 0;display: block}
     li:after{content: "";width: 100%;height: 1px;position: absolute;left: 0;top: 0;transform: scale(1,0.5);background: #e9e9e9;}
-    li .head-pic{width: 0.56rem;height: 0.56rem;border-radius: 50%;margin-right: 0.12rem;float: left}
+    li .head-pic{width: 0.48rem;height: 0.48rem;border-radius: 50%;margin-right: 0.12rem;float: left}
     li .right{float: left;width: calc(~'100% - 0.68rem')}
     li .doctor-group-name{color: #333;font-size: 0.16rem;padding-top: 0.1rem;}
     li .hosp-name{color:#666;font-size:0.12rem;margin-top: 0.03rem}

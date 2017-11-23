@@ -141,7 +141,7 @@ export default {
             const _this = this;
             api.checkFu(this.$store.state.openid).then(function (res) { //查询是否开启随访服务
                 if(res.code === '000'){
-                    if(res.data && res.data.url && !res.data.planid){
+                    if(res.data && !res.data.url && res.data.planid){
 //                        location.replace(res.data.url)
                       _this.$router.replace('/archivesstatus/'+encodeURIComponent(res.data.url));
                     }else if(res.data && res.data.planid && res.data.url){
