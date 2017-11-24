@@ -56,35 +56,37 @@
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup()" v-if="tuwenShow && services.length >0">图文咨询（免费）</a>
+    <a class="btn" @click="tuwenPopup($event)" v-if="tuwenShow && services.length >0">图文咨询（免费）</a>
     <a class="btn" v-if="!tuwenShow && services.length >0" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="showPop">
       <div class="patient-box">
         <div class="patient-box-content">
           <p class="title">为谁咨询<a href="#/patientcreate">添加</a></p>
           <div class="patient-list-box" v-if="patients.length > 0">
-            <div class="patient-item" v-for="data in patients" @click="enterTalk(data.rid)">
-              <swipeout>
-                <swipeout-item  transition-mode="follow">
-                  <div slot="right-menu">
-                    <swipeout-button @click.native="showPlugin(data.rid,$event)" type="warn">
-                      <img src="../assets/jzr_icon_delete@2x.png" alt="">
-                    </swipeout-button>
-                  </div>
-                  <div slot="content" class="swipe-content">
-                    <div class="patient-name">
-                      姓名<br>
-                      <span class="name">{{data.name}}</span>
-                      <!--<img src="../assets/jzr_icon_yrz@2x.png" alt="">-->
+            <div class="list-box">
+              <div class="patient-item" v-for="data in patients" @click="enterTalk(data.rid)">
+                <swipeout>
+                  <swipeout-item  transition-mode="follow">
+                    <div slot="right-menu">
+                      <swipeout-button @click.native="showPlugin(data.rid,$event)" type="warn">
+                        <img src="../assets/jzr_icon_delete@2x.png" alt="">
+                      </swipeout-button>
                     </div>
-                    <div class="paitent-detail">
-                      <p>性别 <span>{{data.sex}}</span></p>
-                      <p>年龄 <span>{{data.age}}岁</span></p>
-                      <p>关系 <span>{{data.relation}}</span></p>
+                    <div slot="content" class="swipe-content">
+                      <div class="patient-name">
+                        姓名<br>
+                        <span class="name">{{data.name}}</span>
+                        <!--<img src="../assets/jzr_icon_yrz@2x.png" alt="">-->
+                      </div>
+                      <div class="paitent-detail">
+                        <p>性别 <span>{{data.sex}}</span></p>
+                        <p>年龄 <span>{{data.age}}岁</span></p>
+                        <p>关系 <span>{{data.relation}}</span></p>
+                      </div>
                     </div>
-                  </div>
-                </swipeout-item>
-              </swipeout>
+                  </swipeout-item>
+                </swipeout>
+              </div>
             </div>
             <div class="service-promise">
               服务承诺<br>
@@ -150,7 +152,12 @@
           })
           this.services = openService;
         }
-      })
+      });
+//      document.addEventListener('touchmove', function (event) {
+//        if (_this.showPop) {
+//          event.preventDefault();
+//        }
+//      },false);
     },
     methods: {
       getPatients(){
@@ -179,9 +186,11 @@
         })
       },
 
-      tuwenPopup(){
+      tuwenPopup(event){
         this.showPop = true;
         this.getPatients();
+//        event.cancelBubble = true;
+
       },
       checkService(num,item){
         this.checknum = num;
@@ -259,10 +268,11 @@
 
   }
   .patient-box{width: 100%;height: 100%;overflow: hidden}
-  .patient-box .patient-box-content{width: 100%;height: 5.2rem;background-color: #F6F6F6;}
+  .patient-box .patient-box-content{width: 100%;max-height: 5.2rem;background-color: #F6F6F6;}
   .patient-box .patient-box-content p{height: .4rem;line-height:.4rem;text-align: center;font-size: .16rem;color: #666666;position: relative;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.10);background-color: #fff}
   .patient-box .patient-box-content p a{position: absolute;width: .54rem;height: .24rem;line-height:.24rem;margin-top:.08rem;font-size: .14rem;color: #00A560;border: 1px solid #00A560;border-radius: 2px;right: .12rem;}
-  .patient-box .patient-box-content .patient-list-box{box-sizing: border-box;padding: .1rem .1rem 0;height: 4rem;overflow-y: auto;}
+  .patient-box .patient-box-content .patient-list-box{box-sizing: border-box;padding: .1rem .1rem 0;height: 5rem;}
+  .patient-box .patient-box-content .patient-list-box .list-box{overflow-y: auto;height: 3.9rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item{width: 100%;height: .86rem;background-color: #fff;margin-bottom: .1rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content{height: .86rem;box-sizing: border-box;padding: .08rem .13rem;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.10);border-radius: .04rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .patient-name{font-size: .12rem;color: #999999;height: .4rem;}
