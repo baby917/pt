@@ -152,7 +152,7 @@
     .doc-list .doc-item .doc-img{width: 0.55rem;position: relative;margin-right: 0.12rem;overflow: hidden;margin-top:.05rem;}
     .doc-list .doc-item img{width: 0.48rem;height: 0.48rem;border-radius: 50%}
     .doc-list .doc-img span{position: absolute;top:0.45rem;background:#6bd1a1;color:#fff;font-size: 0.12rem; border-radius: 40%;z-index: 99;padding: 0.01rem 0.02rem;left: 0.13rem;}
-    .doc-item .doc-info{flex: 1;border-bottom:1px solid #e9e9e9;position: relative}
+    .doc-item .doc-info{flex: 1;border-bottom:1px solid #e9e9e9;position: relative;padding-bottom: .05rem;}
     .doc-item .doc-info p{color:#666;line-height: 0.22rem;}
     .doc-item .doc-info p:last-child{margin-top: 0.05rem;}
     .doc-item .doc-info .doc-name{color:#333;font-size: 0.14rem;margin-right: 0.05rem;}

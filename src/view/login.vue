@@ -61,7 +61,7 @@
     width: 100%;overflow: hidden;font-size: 12px;
     .title{font-size: .26rem;color: #333;margin-top: .4rem;margin-left: .32rem;margin-bottom: .5rem}
     .box{width: 100%;text-align: center;
-      .phone{width: 3.11rem;padding-bottom: .08rem;font-size: .16rem;color: #00a560;border:none;border-bottom: .02rem solid #dfdfdf;margin-bottom: .08rem}
+      .phone{width: 3.11rem;padding-bottom: .08rem;font-size: .16rem;color: #00a560;border:none;border-bottom: .02rem solid #dfdfdf;margin-bottom: .08rem;border-radius: 0}
     }
     .tips{font-size: .12rem;color: #F5A623;margin-bottom: .15rem;text-align: left;margin-left: .3rem;opacity: 0}
     .tips.show{opacity: 1}
