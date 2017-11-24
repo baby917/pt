@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     token:false,
     phone:false,
     openid:false,
-    prefrom:''
+    prefrom:'',
+    checkwechatconfig:false
   }
 });
 export default store;
