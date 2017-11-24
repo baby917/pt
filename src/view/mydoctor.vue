@@ -40,6 +40,7 @@
 import api from '../server'
 import { mapState } from 'vuex'
 import navigate from '../utils/navigate'
+import checklogin from '../utils/checklogin'
 export default{
     data(){
         return {
@@ -74,24 +75,8 @@ export default{
       }
     },
     created:function () {
-      var _this = this;
-      if(this.$store.state.prefrom){//如果不是第一次进来
-        if(this.$store.state.phone && this.$store.state.token){
-          _this.getattion();
-        }else {//不是第一次进来如果没有登录跳去登录
-          var routername = _this.$route.name;
-          location.href = '#/login/'+encodeURIComponent(routername)
-        }
-      }else {//如果是第一次进来
-        if(this.$store.state.phone && this.$store.state.token){
-            _this.getattion();
-        }else if(navigate()=='other' && (!this.$store.state.phone || !this.$store.state.token)){
-          var routername = _this.$route.name;
-          location.href = '#/login/'+encodeURIComponent(routername)
-        }else if(this.$store.state.openid && navigate()=='wechat'){
-          _this.getattion();
-        }
-      }
+      var routername = this.$route.name;
+      checklogin(this.getattion,routername);
     },
 
     methods:{

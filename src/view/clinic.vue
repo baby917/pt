@@ -60,7 +60,7 @@
     <a class="btn" v-if="!tuwenShow && services.length >0" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="showPop">
       <div class="patient-box">
-        <div class="patient-box-content">
+        <div class="patient-box-content" @click.stop="">
           <p class="title">为谁咨询<a href="#/patientcreate">添加</a></p>
           <div class="patient-list-box" v-if="patients.length > 0">
             <div class="list-box" @click.stop="">
@@ -106,6 +106,8 @@
 <script>
   import {SwipeoutItem, SwipeoutButton,Swipeout,Popup,Confirm,TransferDomDirective as TransferDom} from 'vux';
   import api from '../server';
+  import checklogin from '../utils/checklogin'
+  import {mapState} from 'vuex'
   export default {
     directives: {
       TransferDom
@@ -117,6 +119,7 @@
       Popup,
       Confirm
     },
+
     data(){
       return {
         showPop: false,
@@ -133,28 +136,59 @@
         tuwenShow:false
       }
     },
-    mounted(){
-      var _this =this;
-      api.doctorclinic({doctorid:this.doctorId}).then(res=>{
-        if(res.code == '000'){
-          this.doctorInfo = JSON.parse(res.data);
-          console.log(JSON.parse(res.data));
-          this.comment = this.doctorInfo.comment;
-          let openService=[];
-          this.doctorInfo.services.forEach(function (val) {
-            if(val.code == 'reservationCall'){
-              openService.push(val);
-            }
-            if(val.code == 'freeservice'){
-              openService.push(val);
-              _this.tuwenShow=true;
-            }
-          })
-          this.services = openService;
+    computed:{
+      ...mapState({
+        token:state=>state.token,
+      }),
+
+    },
+    watch:{
+      token(){
+        if(this.$store.state.phone && this.$store.state.token){
+          this.getdoctorclinic();
+        }else {
+          var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
+          location.href = '#/login/'+encodeURIComponent(routername)
         }
-      });
+      },
+    },
+    created(){
+      var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
+      checklogin(this.getdoctorclinic,routername)
     },
     methods: {
+      getdoctorclinic(){//获取微诊所信息
+        var _this =this;
+        api.doctorclinic({doctorid:this.doctorId}).then(res=>{
+          if(res.code == '000'){
+            this.doctorInfo = JSON.parse(res.data);
+            //注册分享
+            this.$wechat.onMenuShareTimeline({//朋友圈
+              title:this.doctorInfo.name+'微诊所',
+              link:location.href,
+              imgUrl:'http://img.leley.com/images/leleyun_p/lelyun_logo.png',
+            });
+            this.$wechat.onMenuShareAppMessage({//朋友
+              title:this.doctorInfo.name+'微诊所',
+              desc:JSON.parse(res.data).goodat,
+              link:location.href,
+              imgUrl:'http://img.leley.com/images/leleyun_p/lelyun_logo.png',
+            });
+            this.comment = this.doctorInfo.comment;
+            let openService=[];
+            this.doctorInfo.services.forEach(function (val) {
+              if(val.code == 'reservationCall'){
+                openService.push(val);
+              }
+              if(val.code == 'freeservice'){
+                openService.push(val);
+                _this.tuwenShow=true;
+              }
+            });
+            this.services = openService;
+          }
+        });
+      },
       getPatients(){
         api.getpatients({}).then(res=>{
           if(res.code == '000'){
@@ -209,10 +243,9 @@
             })
           }
         });
+      },
+    },
 
-      }
-
-      }
 
   }
 </script>

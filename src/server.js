@@ -122,7 +122,7 @@ export default {
     },
     getWxConfig(data){  //获取微信签名
         return fetch({
-            url :  BASEURL +'/wxjs/getsign',
+            url :  BASEURL +'/wx/pt/js/getsign',
             data : data
         })
     },
