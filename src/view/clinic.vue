@@ -56,14 +56,14 @@
       </div>
       <!--<confirm v-model="show" :title="title" @on-confirm="onConfirm"</confirm>-->
     </div>
-    <a class="btn" @click="tuwenPopup($event)" v-if="tuwenShow && services.length >0">图文咨询（免费）</a>
+    <a class="btn" @click="tuwenPopup" v-if="tuwenShow && services.length >0">图文咨询（免费）</a>
     <a class="btn" v-if="!tuwenShow && services.length >0" href="http://www.leley.com/pt.html">下载APP体验电话咨询</a>
     <popup v-model="showPop">
       <div class="patient-box">
         <div class="patient-box-content">
           <p class="title">为谁咨询<a href="#/patientcreate">添加</a></p>
           <div class="patient-list-box" v-if="patients.length > 0">
-            <div class="list-box">
+            <div class="list-box" @click.stop="">
               <div class="patient-item" v-for="data in patients" @click="enterTalk(data.rid)">
                 <swipeout>
                   <swipeout-item  transition-mode="follow">
@@ -153,11 +153,6 @@
           this.services = openService;
         }
       });
-//      document.addEventListener('touchmove', function (event) {
-//        if (_this.showPop) {
-//          event.preventDefault();
-//        }
-//      },false);
     },
     methods: {
       getPatients(){
@@ -186,11 +181,9 @@
         })
       },
 
-      tuwenPopup(event){
+      tuwenPopup(){
         this.showPop = true;
         this.getPatients();
-//        event.cancelBubble = true;
-
       },
       checkService(num,item){
         this.checknum = num;
@@ -271,12 +264,12 @@
   .patient-box .patient-box-content{width: 100%;max-height: 5.2rem;background-color: #F6F6F6;}
   .patient-box .patient-box-content p{height: .4rem;line-height:.4rem;text-align: center;font-size: .16rem;color: #666666;position: relative;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.10);background-color: #fff}
   .patient-box .patient-box-content p a{position: absolute;width: .54rem;height: .24rem;line-height:.24rem;margin-top:.08rem;font-size: .14rem;color: #00A560;border: 1px solid #00A560;border-radius: 2px;right: .12rem;}
-  .patient-box .patient-box-content .patient-list-box{box-sizing: border-box;padding: .1rem .1rem 0;height: 5rem;}
-  .patient-box .patient-box-content .patient-list-box .list-box{overflow-y: auto;height: 3.9rem;}
+  .patient-box .patient-box-content .patient-list-box{box-sizing: border-box;padding: .1rem .1rem 0;height: 4rem;}
+  .patient-box .patient-box-content .patient-list-box .list-box{overflow-y: auto;height: 3.1rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item{width: 100%;height: .86rem;background-color: #fff;margin-bottom: .1rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content{height: .86rem;box-sizing: border-box;padding: .08rem .13rem;box-shadow: 0 1px 1px 0 rgba(0,0,0,0.10);border-radius: .04rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .patient-name{font-size: .12rem;color: #999999;height: .4rem;}
-  .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .patient-name .name{font-size: .16rem;color: #333;}
+  .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .patient-name .name{font-size: .16rem;color: #333;display: block;margin-top: .03rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .patient-name img{float:right;width: .4rem;height: .15rem;margin-right:.1rem;}
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .paitent-detail p{
     font-size: .12rem;display: inline-block;color: #999;box-shadow: none;
@@ -287,7 +280,7 @@
   .patient-box .patient-box-content .patient-list-box .patient-item .swipe-content .paitent-detail p span{
     color: #666666;
   }
-  .patient-box .patient-box-content .patient-list-box .service-promise{position: fixed;height: .74rem;box-sizing: border-box;padding: .12rem;font-size: .12rem;color: #666666;bottom: 0;box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.08);width: 100%;background-color: #fff;}
+  .patient-box .patient-box-content .patient-list-box .service-promise{position: fixed;height: .74rem;box-sizing: border-box;padding: .12rem;font-size: .12rem;color: #666666;bottom: 0;box-shadow: 0 -2px 2px 0 rgba(0,0,0,0.08);width: 95%;background-color: #fff;}
   .patient-box .patient-box-content .none-patient{background: #fff;text-align: center;font-size: .14rem;color: #999999;height: 100%;box-sizing: border-box;padding-top: 1rem;}
   .patient-box .patient-box-content .none-patient img{width: 1.8rem;height: 1.8rem;margin-bottom: .28rem;}
 
