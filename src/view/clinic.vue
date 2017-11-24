@@ -142,19 +142,8 @@
       }),
 
     },
-    watch:{
-      token(){
-        if(this.$store.state.phone && this.$store.state.token){
-          this.getdoctorclinic();
-        }else {
-          var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
-          location.href = '#/login/'+encodeURIComponent(routername)
-        }
-      },
-    },
     created(){
-      var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
-      checklogin(this.getdoctorclinic,routername)
+      this.getdoctorclinic();
     },
     methods: {
       getdoctorclinic(){//获取微诊所信息
@@ -193,6 +182,9 @@
         api.getpatients({}).then(res=>{
           if(res.code == '000'){
             this.patients = JSON.parse(res.data);
+          }else if(res.code === '10007'){
+            var routername = this.$route.fullPath.substring(1,this.$route.fullPath.length);
+            location.href = '#/login/'+encodeURIComponent(routername)
           }
         })
       },
@@ -218,8 +210,6 @@
       tuwenPopup(event){
         this.showPop = true;
         this.getPatients();
-//        event.cancelBubble = true;
-
       },
       checkService(num,item){
         this.checknum = num;

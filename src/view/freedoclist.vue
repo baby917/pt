@@ -80,18 +80,19 @@
       })
     },
     watch:{
-      token(){
-        if(this.$store.state.phone && this.$store.state.token){
-          this.getdoclist(this.deptid);
-        }else {
-          var routername = this.$route.name;
-          location.href = '#/login/'+encodeURIComponent(routername)
-        }
-      }
+//      token(){
+//        if(this.$store.state.phone && this.$store.state.token){
+//          this.getdoclist(this.deptid);
+//        }else {
+//          var routername = this.$route.name;
+//          location.href = '#/login/'+encodeURIComponent(routername)
+//        }
+//      }
     },
     created(){
-      var routername = this.$route.name;
-      checklogin(this.getdoclist,routername);
+      this.getdoclist();
+//      var routername = this.$route.name;
+//      checklogin(this.getdoclist,routername);
     },
     methods:{
       filterdept(){
