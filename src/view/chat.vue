@@ -358,7 +358,7 @@
       }
     }
 
-    .input-box{position: fixed; width: 100%; left: 0; bottom: 0; height: .5rem; background: #F4F4F6;line-height: .5rem;
+    .input-box{position: fixed; width: 100%; left: 0; bottom: 0; height: .5rem; background: #F4F4F6;line-height: .5rem;padding:0 .2rem;box-sizing: border-box;
       border-top: 1px solid #e9e9e9;box-shadow: 0 -1px 0 0 #f4f4f6;
       -webkit-touch-callout:none;
       -moz-touch-callout:none;
@@ -368,10 +368,10 @@
     .input-box .record{padding:0 .1rem;display: inline-block;}
     .record img{width: .25rem;vertical-align: middle}
     .input-box div .plus{width: .3rem;height: .3rem;vertical-align: middle;}
-    .input-box input{height: .4rem;border: none;vertical-align: middle;padding: 0 .1rem;width: 2.55rem;font-size: .14rem;margin-left: .2rem}
+    .input-box input{height: .4rem;border: none;vertical-align: middle;padding: 0 .1rem;width: 2.7rem;font-size: .14rem;}
     .input-box button{height: .4rem;border: 1px solid #e9e9e9;border-radius:5px;vertical-align: middle;width: 2.75rem;font-size: .14rem;outline: none;background-color: transparent;}
     .input-box button.active{background-color: #dfdfdf}
-    .input-box .upload-img{padding-left:.1rem;display: inline-block;}
+    .input-box .upload-img{padding-left:.15rem;display: inline-block;}
     .input-box .upload-img div{
       font-size: 12px;
       display: inline-block;
