@@ -28,6 +28,8 @@ router.beforeEach(function (to, from, next) {//每次路由变化开始
 router.afterEach(function (to, from) {//每次路由变化结束
 
 });
+
+//过滤器
 Vue.filter('time',function (value) {
   //聊天时间
   var value = new Date(value);
