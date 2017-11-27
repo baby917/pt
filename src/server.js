@@ -9,10 +9,10 @@ import store from './store/store'
 import Vue from 'vue'
 
 //预发模式
-const MODEL = 'dev';
+// const MODEL = 'dev';
 
 //线上模式
-// const MODEL = 'dist';
+const MODEL = 'dist';
 
 let APPID;
 if(useragent() == 'wechat'){
@@ -30,7 +30,7 @@ if(MODEL === 'dev'){
     FUBASEURL='http://59.110.18.99:8000'
 }
 else if(MODEL === 'dist'){
-    BASEURL = 'http://47.93.158.251';
+    BASEURL = 'http://dtapi.weixin.leley.com/';
     BASEIMGURL = 'http://img.leley.com/';
     UPLOADIMGURL = 'http://oss.leley.com/';
     FUBASEURL='http://api.leley.com'
