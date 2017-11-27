@@ -276,7 +276,7 @@
     .type-item p:first-of-type{font-size: 0.14rem;}
     .type-item p:last-of-type{font-size: 0.12rem;color: #999}
     .consult-text{text-align: center;line-height: .44rem;font-size: .14rem;color: #666666;}
-    .consult-text img{width: .12rem;height: .12rem;vertical-align: middle}
+    .consult-text img{width: .16rem;height: .16rem;vertical-align: middle}
     .divide{height: .1rem;width: 100%;background-color: #eee}
     .dept-info{min-height: 0.65rem;margin-left: 0.12rem;overflow: hidden;border-bottom: 1px solid #e9e9e9;}
     h5{color: #999;line-height: 0.3rem;font-weight: normal;padding-top: 0.05rem;}

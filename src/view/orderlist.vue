@@ -128,7 +128,7 @@
           span{font-size: .16rem;color: #151515}
         }
         .buy-again{
-          float: right;width: .72rem;height: .28rem;border: 1px solid #00A560;margin-right: .12rem;margin-top: .07rem;
+          float: right;width: .72rem;height: .28rem;border: 1px solid #00A560;margin-right: .12rem;margin-top: .06rem;
           border-radius: 2px;font-size: .13rem;color: #00a560;text-align: center;line-height: .28rem;
         }
       }
