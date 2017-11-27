@@ -4,7 +4,7 @@
       <p class="tips">请描述病情，等待医生回复。<br>客服电话<a href="tel:4001816106">400-181-6106</a></p>
       <div class="text-area-list">
         <div class="text-area-item" :class="{left:one.pusherId == msg.doctorUserId.toString(),right:one.pusherId !== msg.doctorUserId.toString()}" v-for="(one,index) in chatList">
-          <p class="time">{{one.createDate}}</p>
+          <p class="time">{{one.createDate | time}}</p>
           <div class="inner">
             <img :src="BASEIMGURL + one.headUrl" alt="" class="avatar" :onerror="defaultImg" v-if="one.pusherId==msg.doctorUserId.toString()">
             <img :src="myhead" alt="" class="avatar" :onerror="defaultmyImg" v-if="one.pusherId!=msg.doctorUserId.toString()">
@@ -147,7 +147,7 @@
           return false
         }
         var item = {
-          createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
+          createDate:new Date().getTime(),
           url:this.myhead,
           content:this.inputText,
           secondType:'4001',
@@ -176,7 +176,7 @@
         abc.append('METHOD','uploadimage');
         abc.append('RECDATA',JSON.stringify({code:'chat'}));
         var item = {
-          createDate:new Date().getFullYear() + '-' +(new Date().getMonth()+1) + '-' + new Date().getDate(),
+          createDate:new Date().getTime(),
           url:this.myhead,
           content:require('../assets/loading.gif'),
           secondType:'4003',
@@ -237,10 +237,6 @@
 //         按时间排序
             chatData.sort(function (a,b) {
               return a.createDate - b.createDate
-            });
-            chatData.forEach(function (data) {
-              var time=data.createDate;
-              data.createDate=new Date(time).getFullYear()+'-'+(new Date(time).getMonth()+1)+'-'+new Date(time).getDate();
             });
             _this.chatList=chatData;
             api.getuserinfo({}).then(function (res) {

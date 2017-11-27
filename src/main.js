@@ -28,6 +28,39 @@ router.beforeEach(function (to, from, next) {//每次路由变化开始
 router.afterEach(function (to, from) {//每次路由变化结束
 
 });
+Vue.filter('time',function (value) {
+  //聊天时间
+  var value = new Date(value);
+  var vay = value.getFullYear();
+  var vam = value.getMonth()+1;
+  var vd = value.getDate();
+  var vh = value.getHours();
+  var vs = value.getMinutes();
+  //当前时间
+  var nowtime = new Date();
+  var nowy = nowtime.getFullYear();
+  var nowm = nowtime.getMonth()+1;
+  var nowd = nowtime.getDate();
+  var nowh = nowtime.getHours();
+  var nows = nowtime.getMinutes();
+  if(vay<nowy){//不是今年的
+    return vay+'-'+(vam>9?vam:'0'+vam)+'-'+(vd>9?vd:'0'+vd)+' '+(vh>9?vh:'0'+vh)+':'+(vs>9?vs:'0'+vs)
+  }else {
+    if(vam<nowm){//不是这个月的
+      return (vam>9?vam:'0'+vam)+'-'+(vd>9?vd:'0'+vd)+' '+(vh>9?vh:'0'+vh)+':'+(vs>9?vs:'0'+vs)
+    }else {
+      if(vd == nowd){//当天的
+        return (vh>9?vh:'0'+vh)+':'+(vs>9?vs:'0'+vs)
+      }else if(nowd - vd ==1){//昨天的
+        return '昨天 '+(vh>9?vh:'0'+vh)+':'+(vs>9?vs:'0'+vs)
+      }else {//昨天以前的
+        return (vam>9?vam:'0'+vam)+'-'+(vd>9?vd:'0'+vd)+' '+(vh>9?vh:'0'+vh)+':'+(vs>9?vs:'0'+vs)
+      }
+    }
+  }
+
+});
+
 
 new Vue({
   router,
